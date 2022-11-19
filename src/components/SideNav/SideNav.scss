@@ -1,0 +1,103 @@
+.sidenav {
+    &__container {
+        width: 400px;
+        background-color: #fff;
+        transition: all 0.2s linear;
+        position:absolute;
+        height: 100%;
+        transform: translate(-800px);
+        z-index: 1;
+    }
+
+    &__container--open {
+        transform: translate(0);
+    }
+
+    &__content {
+
+        padding: 1rem .5rem;
+
+        &-option {
+            padding: 1rem;
+            align-items: center;
+            display: flex;
+            gap: .5rem;
+        }
+
+        &-item {
+            list-style: none;
+            cursor: pointer;
+            margin: .5rem 0;
+        }
+
+        &-item:hover {
+            background-color: #f5f6f6;
+        }
+
+        &-text {
+            font-size: 20px;
+            font-weight: 500;
+            padding: .5rem;
+            position: relative;
+            width: 100%;
+        }
+
+        &-text::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: grey;
+        }
+
+    }
+
+    &__user {
+        &-data {
+            display: flex;
+            flex-direction: column;
+            margin: 1rem;
+            gap: .5rem;
+        }
+
+        &-image {
+            width: 80px;
+            border-radius: 50%;
+            height: auto;
+            object-fit: contain;
+        }
+    }
+
+    &__user-info {
+        display: flex;
+    }
+
+    &__header {
+        background-color: #0576a3;
+        height: 75px;
+        padding: .7rem 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &-btn-close {
+            display: flex;
+            height: 100%;
+            align-items: center;
+            cursor: pointer;
+        }
+
+        &-btn-logout {
+            outline: 0;
+            padding: .5rem;
+            border: 0;
+            text-align: center;
+            gap: .5rem;
+            align-items: center;
+            cursor: pointer;
+            display: flex;
+        }
+    }
+}

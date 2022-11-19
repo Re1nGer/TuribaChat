@@ -1,0 +1,44 @@
+.room {
+    flex: 2;
+    background-position: center 0;
+    background-attachment: fixed;
+    background-repeat: no-repeat; 
+    background-size: cover; 
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    &__header {
+        background-color: #f0f2f5;
+        padding: 1rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    &__metadata {
+        display: flex;
+        align-items: center;
+        &-picture {
+            margin-right: .5rem;
+            img {
+                width: 40px;
+                border-radius: 50%;
+                height: auto;
+                object-fit: contain;
+            }
+        }
+    }
+
+    &__options {
+        display: flex;
+        gap: 1rem;
+    }
+
+    &__messages {
+        padding: 0 1rem;
+        overflow-y: auto;
+        word-wrap: break-word;
+    }
+}
