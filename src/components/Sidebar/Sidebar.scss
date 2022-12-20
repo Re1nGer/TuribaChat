@@ -55,8 +55,9 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     cursor: pointer;
+    transition: background .2s linear;
 
-    &__selected {
+    &--selected {
         background-color: #d1d7db;
     }
 
@@ -74,7 +75,7 @@
         }
     }
 
-    &__group {
+    &__groups {
         display: flex;
         flex-direction: column;
     }

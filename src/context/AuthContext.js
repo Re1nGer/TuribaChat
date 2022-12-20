@@ -13,6 +13,8 @@ export const AuthContextProvider = ({children}) => {
 
     const [selectedRoomId, setSelectedRoomId] = React.useState('');
 
+    const [selectedMessage, setSelectedMessage] = React.useState();
+
     React.useEffect(() => {
         const unsubsribe = onAuthStateChanged(auth, user => {
             setCurrentUser(user);
@@ -22,6 +24,8 @@ export const AuthContextProvider = ({children}) => {
     },[])
 
     const value = {
+        selectedMessage,
+        setSelectedMessage,
         isLoggedIn,
         selectedRoomId,
         setSelectedRoomId,

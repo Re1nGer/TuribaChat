@@ -1,9 +1,10 @@
-import React, { useRef } from 'react';
-import { Smile, Paperclip, Send } from 'react-feather';
+import React, { useContext, useRef } from 'react';
+import { Smile, Paperclip, Send, X } from 'react-feather';
 import EmojiPicker from 'emoji-picker-react';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
 import useDebounce from '../../hooks/useDebounce';
+import { AuthContext } from '../../context/AuthContext';
 
 
 const MessageInput = () => {
@@ -11,6 +12,10 @@ const MessageInput = () => {
     const [isEmojiTabOpen, setIsEmojiTabOpen] = React.useState(false);
 
     const { sendMessageAndUpdateLastGroupMessage, uploadFile } = useChat();
+
+    const { selectedMessage, setSelectedMessage } = useContext(AuthContext);
+
+    console.log(selectedMessage);
 
     const [isInputTextEmpty, setIsInputTextEmpty] = React.useState(true);
 
@@ -33,6 +38,10 @@ const MessageInput = () => {
         setIsInputTextEmpty(e.target.value === '' ? true : false );
     }
 
+    const handleClose = () => {
+        setSelectedMessage();
+    }
+
     const debouncedOnInputChange = useDebounce(onInputChange, 200);
 
     return <>
@@ -40,6 +49,16 @@ const MessageInput = () => {
             <EmojiPicker previewConfig={{showPreview:false}} height={300} onEmojiClick={() => {}} />
         }
         <form method='post' onSubmit={onSubmitMessage}>
+
+            {selectedMessage !== undefined ? <div className='message__reply'>
+                <div className='message__reply-content'>
+                    {selectedMessage.messageText}
+                </div>
+                <div className='message__reply-close' onClick={handleClose}>
+                    <X />
+                </div>
+            </div> : null}
+
             <div className='message-input'>
                 <div className='message-input__options'>
                     <div className='message-input__emoji'>

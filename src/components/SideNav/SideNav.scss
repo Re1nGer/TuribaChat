@@ -1,16 +1,16 @@
 .sidenav {
     &__container {
-        width: 400px;
+        width: 0;
         background-color: #fff;
-        transition: all 0.2s linear;
-        position:absolute;
+        transition: all .2s ease-out;
+        position: absolute;
+        z-index: -10;
         height: 100%;
-        transform: translate(-800px);
-        z-index: 1;
     }
 
     &__container--open {
-        transform: translate(0);
+        width: 400px;
+        z-index: 10;
     }
 
     &__content {

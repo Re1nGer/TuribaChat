@@ -86,6 +86,34 @@
         flex-direction: column;
         gap: 1rem;
         align-items: center;
+		width: 100%;
     }
+
+	&__link {
+		display: flex;
+		gap: .5rem;
+		width: 100%;
+		justify-content: center;
+		
+		&-input {
+			outline: none;
+			padding: .5rem 1rem;
+			max-width: 400px;
+			width: 100%;
+		}
+
+		&-icon {
+			&_container {
+				display: flex;
+				align-items: center;
+				cursor: pointer;
+				transition: color .2s linear;
+
+				&:hover {
+					color: #00d9ffb0;
+				}
+			}
+		}
+	}
 }
 

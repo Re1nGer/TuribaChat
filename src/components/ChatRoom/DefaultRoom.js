@@ -3,8 +3,14 @@ import "./ChatRoom.scss";
 
 const DefaultRoom = () => {
 
-    return <div className='default-room'>
-        <h1>Select chat to begin a conversation</h1></div>
+    return <>
+    <div className='default-room'>
+          <div class="sign">
+            <span class="fast-flicker">b</span>rea<span class="flicker">t</span>he
+        </div>
+    </div>
+    <div className='default-room__bottom'></div>
+    </>
 }
 
 

@@ -1,10 +1,9 @@
 import React, { useContext, useRef } from 'react';
-import { Plus } from 'react-feather';
 import { collection, addDoc, serverTimestamp, setDoc, doc } from "firebase/firestore";
 import { db } from '../../firebase/firebase';
 import './Modal.scss';
 import { AuthContext } from '../../context/AuthContext';
-import TextField from '../../UI/Inputs/TextField';
+import { ModalLink } from './ModalLink';
 
 const AddGroupModal = ({open, setIsOpen}) => {
 
@@ -22,17 +21,17 @@ const AddGroupModal = ({open, setIsOpen}) => {
 
             const groupName = inputRef.current;
 
-            if (!groupName) return;
+            if (!groupName.value) return;
 
             const docRef = await addDoc(collection(db, "chatRooms"), {
                 createdAt: serverTimestamp(),
                 createdBy: currentUser.uid,
                 members: Array(currentUser.uid),
-                name: groupName,
+                name: groupName.value,
                 recentMessage: { message: '' }
             });
 
-            inputRef.current = "";
+            inputRef.current.value = "";
 
             await setDoc(doc(db ,'messages', docRef.id), {
                 messages: []
@@ -52,6 +51,11 @@ const AddGroupModal = ({open, setIsOpen}) => {
         setIsOpen(false);
     }
 
+    React.useEffect(() => {
+
+        return () => setGroupLink('');
+    },[])
+
     return <>
             { open && (
                 <div className='modalDialog' onClick={() => setIsOpen(false)}>
@@ -60,17 +64,18 @@ const AddGroupModal = ({open, setIsOpen}) => {
                             <div onClick={handleCloseAddGroupModal} className="close">X</div>
                             <div className='modal__inner'>
                                 <h2>Group Name:</h2>
-                                <TextField name={'somename'} label={'groupName'}  />
                                 <input ref={inputRef} type={'text'} name='groupName' className='modalDialog__input' />
                                 <button type='submit' className='modalDialog__button'>Create a group</button>
-                                <h3>{groupLink}</h3>
+                                 { groupLink !== '' ? <>
+                                    <h3 className='modal__link-heading'>Group Link</h3>
+                                    <ModalLink groupLink={groupLink} />
+                                 </>  : null }
                             </div>
                         </form>
                     </div>
                 </div>
             ) }
-    </>
-}
-
+        </>
+    }
 
 export default AddGroupModal;

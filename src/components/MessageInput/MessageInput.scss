@@ -48,5 +48,49 @@
         transition: all .2s linear;
     }
 
-    
+
+}
+
+.message {
+
+    &__reply {
+
+        transition: height .3s linear;
+
+        display: flex;
+
+        height: 75px;
+
+        width: 100%;
+
+        background: #f0f2f5;
+
+        padding: 1rem 2rem;
+
+        &-user {
+            color: green;
+            font-size: 14px;
+            padding: 4px 0;
+            width: 100%;
+            display: flex;
+            justify-content: flex-start;
+        }
+
+        &-content {
+            display: flex;
+            flex: 1;
+            background: #d1d7db;
+            border-left: 3px green solid;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        &-close {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+            justify-content: flex-end;
+        }
+    }
+
 }

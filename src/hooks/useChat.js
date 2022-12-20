@@ -1,8 +1,9 @@
-import { useContext } from 'react';
+import { useContext, useId } from 'react';
 import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
 import { uploadBytes, getStorage, ref  } from 'firebase/storage';
 import { db } from '../firebase/firebase';
 import { AuthContext } from '../context/AuthContext';
+import {v4 as uuidv4} from 'uuid';
 
 const useChat = () => {
 
@@ -16,7 +17,8 @@ const useChat = () => {
             isRead: false,
             sentBy: currentUser.uid,
             sentByName: currentUser.displayName,
-            type: 'text'
+            type: 'text',
+            id: uuidv4()
         };
 
         await updateDoc(doc(db, 'messages', selectedRoomId), {

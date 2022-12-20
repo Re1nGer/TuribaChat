@@ -26,7 +26,7 @@ const ChatRoomSidebar = ({
     },[selectedRoomId])
 
     return <>
-        <div className={isRoomSelected ? 'chat-room-sidebar chat-room-sidebar__selected': 'chat-room-sidebar'} onClick={() => handleRoomSelect(id)}>
+        <div className={isRoomSelected ? 'chat-room-sidebar chat-room-sidebar--selected': 'chat-room-sidebar'} onClick={() => handleRoomSelect(id)}>
             <div className={'chat-room-sidebar__inner'}>
                 <div className='chat-room-sidebar__picture'><img src={groupImgSrc} alt='group picture' /></div>
                 <div className='chat-room-sidebar__group'>

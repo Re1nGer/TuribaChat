@@ -1,22 +1,23 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Search as SearchIcon, Menu as MenuIcon } from 'react-feather';
 import { AuthContext } from '../../context/AuthContext';
-import { db } from '../../firebase/firebase';
-import { doc, getDoc} from 'firebase/firestore';
 import DefaultRoom from './DefaultRoom';
 import { useParams } from 'react-router-dom';
 import './ChatRoom.scss';
-import { ChatContext } from '../../context/ChatContext';
 import SelectedRoom from './SelectedRoom';
 import BackgroundImage from './images/chat_background.jpg';
+import { query, onSnapshot, where, getDocs, collection, doc, arrayUnion, updateDoc, getDoc } from 'firebase/firestore';
+import { child, get } from 'firebase/database';
+import { db } from '../../firebase/firebase';
+import DefaultRoomImage from './images/avatardefault.png';
 
 const ChatRoom = () => {
 
-    const { selectedRoomId, setSelectedRoomId } = useContext(AuthContext);
-
-    const { messages, cleanupMessages } = useContext(ChatContext);
+    const { selectedRoomId, setSelectedRoomId } = React.useContext(AuthContext);
 
     const [groupMetadata, setGroupMetadata] = React.useState();
+
+    const [messages, setMessages] = React.useState([]);
 
     const { id } = useParams();
 
@@ -24,7 +25,7 @@ const ChatRoom = () => {
         try {
             const chatGroupQuery = doc(db, 'chatRooms', selectedRoomId);
 
-            const roomSnap = await getDoc(chatGroupQuery);
+            const roomSnap = await getDocs(chatGroupQuery);
 
             setGroupMetadata(roomSnap.data());
 
@@ -33,25 +34,24 @@ const ChatRoom = () => {
         }
     }
 
-
     React.useEffect(() => {
-
         if (id) setSelectedRoomId(id);
-
-        if (selectedRoomId)
-            fetchGroupMetadata();
-
-        return () => cleanupMessages();
-            
-
-    },[selectedRoomId])
+         
+        fetchGroupMetadata();
+        if (selectedRoomId) {
+            onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
+                setMessages(document.data().messages);
+            });
+        }
+        
+    },[id, selectedRoomId])
 
     return <>
-        <div className='room' style={{backgroundImage: `url(${BackgroundImage})`}}>
+        <div className='room'>
             <header className='room__header'>
                 <div className='room__metadata'>
                     <div className='room__metadata-picture'>
-                        <img src='https://www.kindpng.com/picc/m/24-248253_user-profile-default-image-png-clipart-png-download.png' alt='room picture' />
+                        <img src={DefaultRoomImage} alt='room picture' />
                     </div>
                     <div className='room__metadata-name'>
                         { groupMetadata?.name }
