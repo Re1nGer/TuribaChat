@@ -11,6 +11,15 @@ const SelectedRoom = ({ messages }) => {
         ref.current?.scrollIntoView({behavior: 'smooth'});
     },[messages])
 
+    if (messages.length === 0) {
+        return <>
+            <div className='room__messages'>
+                <h2>No Messages Yet!!!</h2>
+            </div>
+            <MessageInput />
+        </>
+    }
+
     return <>
         <div className='room__messages'>
             {messages.map((message, id) => <ChatRoomMessage key={id} message={message} />)}

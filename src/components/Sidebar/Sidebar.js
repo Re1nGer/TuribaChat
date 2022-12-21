@@ -35,7 +35,7 @@ const Sidebar = ({groups}) => {
                                 id={group.id}
                                 groupName={group.name}
                                 groupImgSrc={DefaultAvatarImage}
-                                groupLastMessage={group.recentMessage.message}
+                                groupLastMessage={group.recentMessage?.message}
                             />
                     })
                 }

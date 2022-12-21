@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import "./SideNav.scss";
-import { auth } from '../../firebase/firebase';
+import { auth } from '../../../firebase';
 import { ArrowLeft, Bell, Lock, LogOut, Settings } from 'react-feather';
 import { AuthContext } from '../../context/AuthContext';
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import './SignInModal.scss';
-import { signInWithGithub, signInWithGoogle } from '../../firebase/firebase';
+import { signInWithGithub, signInWithGoogle } from '../../../firebase';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { GitHub } from 'react-feather';
 

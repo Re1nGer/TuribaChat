@@ -25,7 +25,7 @@ const ChatRoomMessage = ({ message }) => {
         <div className={isOurs ? 'chat-room_message ours': 'chat-room_message users'}>
             <div className={`${isOurs ? 'chat-room_message__inner chat-room_message__inner--ours': 'chat-room_message__inner'}`}>
                 <div className='chat-room_message__content'>
-                    { message.type === 'text' ? <RoomMessage messageText={message} /> : <RoomFile fileName={message.fileName} />  }
+                    { message.type === 'text' ? <RoomMessage messageText={message} /> : <RoomFile size={message.size} fileName={message.fileName} />  }
                 </div>
                 <div className='chat-room_message__datetime'>
                     {dayjs(message.sentAt?.toDate()).format('HH:MM')}

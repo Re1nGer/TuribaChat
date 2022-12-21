@@ -1,11 +1,17 @@
-const path = require("path");
+ const path = require('path');
+// const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-module.exports = {
+ module.exports = {
   output: {
     path: path.join(__dirname, "/dir"),
     filename: "index.bundle.js",
   },
-  devServer: {
+/*    plugins: [
+     new HtmlWebpackPlugin({
+       title: 'Development',
+     }),
+   ], */
+   devServer: {
     port: 3000,
     historyApiFallback: true,
   },
@@ -36,5 +42,5 @@ module.exports = {
         use: ["source-map-loader"],
       },
     ],
-  },
-};
+  }
+ };

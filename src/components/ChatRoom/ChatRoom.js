@@ -5,10 +5,9 @@ import DefaultRoom from './DefaultRoom';
 import { useParams } from 'react-router-dom';
 import './ChatRoom.scss';
 import SelectedRoom from './SelectedRoom';
-import BackgroundImage from './images/chat_background.jpg';
 import { query, onSnapshot, where, getDocs, collection, doc, arrayUnion, updateDoc, getDoc } from 'firebase/firestore';
 import { child, get } from 'firebase/database';
-import { db } from '../../firebase/firebase';
+import { db } from '../../../firebase';
 import DefaultRoomImage from './images/avatardefault.png';
 
 const ChatRoom = () => {

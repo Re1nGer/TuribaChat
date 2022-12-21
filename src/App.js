@@ -17,8 +17,7 @@ export function App() {
                     <Route index path='/login' element={<LoginView />} />
                     <Route element={<ProtectedRoute />}>
                         <Route path='/dashboard' element={<DashboardView />} />
-                        <Route path='/dashboard/:id' element={<DashboardView />} />
-                        <Route path='/group/:id' element={<DashboardView />} />
+                        <Route path='/dashboard/:groupId' element={<DashboardView />} />
                     </Route>
                     <Route path='*' element={<WildCardView />} />
                 </Route>

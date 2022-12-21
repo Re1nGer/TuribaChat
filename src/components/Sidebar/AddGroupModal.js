@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { collection, addDoc, serverTimestamp, setDoc, doc } from "firebase/firestore";
-import { db } from '../../firebase/firebase';
+import { db } from '../../../firebase';
 import './Modal.scss';
 import { AuthContext } from '../../context/AuthContext';
 import { ModalLink } from './ModalLink';
@@ -52,7 +52,6 @@ const AddGroupModal = ({open, setIsOpen}) => {
     }
 
     React.useEffect(() => {
-
         return () => setGroupLink('');
     },[])
 

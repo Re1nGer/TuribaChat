@@ -3,12 +3,12 @@ import Sidebar from '../Sidebar/Sidebar';
 import ChatRoom from '../ChatRoom/ChatRoom';
 import './Dashboard.scss';
 import { AuthContext } from '../../context/AuthContext';
-import { query, where, collection, onSnapshot } from 'firebase/firestore';
-import { db } from '../../firebase/firebase';
+import { query, where, collection, onSnapshot, setDoc, arrayUnion, doc } from 'firebase/firestore';
+import { db } from '../../../firebase';
 
 
 
-const Dashboard = () => {
+const Dashboard = ({ groupId }) => {
 
     const [groups, setGroups] = React.useState([]);
 
@@ -28,9 +28,17 @@ const Dashboard = () => {
         }
     }
 
+    const setGroup = () => {
+        const docRef = doc(db, "chatRooms", groupId);
+        if (currentUser?.uid)
+            setDoc(docRef, { members: arrayUnion(currentUser.uid) })
+    }
+
+
     React.useEffect(() => {
+        if (groupId) setGroup();
         fetchGroups();
-    },[currentUser?.uid])
+    },[currentUser?.uid, groupId])
 
     return <>
         <div className='dashboard'>

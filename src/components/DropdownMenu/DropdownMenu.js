@@ -1,6 +1,6 @@
 import React from 'react';
 import { MoreVertical } from "react-feather";
-import { auth } from '../../firebase/firebase';
+import { auth } from '../../../firebase';
 import AddGroupModal from '../Sidebar/AddGroupModal';
 import "./DropdownMenu.scss";
 

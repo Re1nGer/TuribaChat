@@ -1,9 +1,10 @@
 import React, { useContext } from 'react';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { AuthContext } from '../../context/AuthContext';
+import { File } from 'react-feather';
 
 
-const RoomFile = ({fileName}) => {
+const RoomFile = ({ size, fileName }) => {
 
     const { selectedRoomId } = useContext(AuthContext);
 
@@ -13,15 +14,20 @@ const RoomFile = ({fileName}) => {
 
     const handleDownload = (event) => {
         getDownloadURL(storageRef)
-        .then((url) => {
-            window.open(url,'_blank');
-            });
+        .then((url) => { window.open(url,'_blank'); });
         }
 
+    function humanFileSize(size) {
+        var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+    return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
+}
     return (
-        <div className='chat-room-message__content'>
-           <p>{fileName}</p>
-           <button onClick={handleDownload}>Download</button>
+        <div className='chat-room__file'>
+            <div className='chat-room__inner'>
+                <File className='chat-room__icon' onClick={handleDownload} />
+                <p>{fileName}</p>
+            </div>
+            <span>{humanFileSize(size)}</span>
         </div>
     )
 

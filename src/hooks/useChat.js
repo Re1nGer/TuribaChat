@@ -1,15 +1,19 @@
-import { useContext, useId } from 'react';
+import { useContext } from 'react';
 import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
-import { uploadBytes, getStorage, ref  } from 'firebase/storage';
-import { db } from '../firebase/firebase';
+import { uploadBytes, getStorage, ref } from 'firebase/storage';
+import { db } from '../../firebase';
 import { AuthContext } from '../context/AuthContext';
 import {v4 as uuidv4} from 'uuid';
+import { getMessaging, onMessage } from "firebase/messaging";
+
 
 const useChat = () => {
 
-    const { selectedRoomId, currentUser } = useContext(AuthContext);
+    const { selectedRoomId, currentUser, selectedMessage } = useContext(AuthContext);
 
     const sendMessageAndUpdateLastGroupMessage = async (inputMessage) => {
+
+        const { messageText, sentByName } = selectedMessage || {};
 
         const message = {
             messageText: inputMessage,
@@ -18,6 +22,7 @@ const useChat = () => {
             sentBy: currentUser.uid,
             sentByName: currentUser.displayName,
             type: 'text',
+            replyTo: selectedMessage !== undefined ? { messageText, sentByName } : null,
             id: uuidv4()
         };
 
@@ -36,9 +41,7 @@ const useChat = () => {
 
         const file = event.target.files[0];
 
-        const metadata = {
-            contentType: file.type
-        };
+        const metadata = { contentType: file.type };
 
         const storage = getStorage();
 
@@ -54,6 +57,7 @@ const useChat = () => {
             sentAt: new Date(),
             sentBy: currentUser.uid,
             contentType: file.type,
+            replyTo: selectedMessage !== undefined ? { messageText, sentByName } : null,
             size: file.size / (1024 ** 2)
         };
 
@@ -62,11 +66,8 @@ const useChat = () => {
         });
 
         await updateDoc(doc(db, 'chatRooms', selectedRoomId), {
-            recentMessage: {
-                message: file.name
-            }
+            recentMessage: { message: file.name }
         });
-
     }
 
     return { sendMessageAndUpdateLastGroupMessage, uploadFile }

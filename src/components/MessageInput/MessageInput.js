@@ -1,5 +1,5 @@
 import React, { useContext, useRef } from 'react';
-import { Smile, Paperclip, Send, X } from 'react-feather';
+import { Smile, Paperclip, Send, X, Copy } from 'react-feather';
 import EmojiPicker from 'emoji-picker-react';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
@@ -25,17 +25,23 @@ const MessageInput = () => {
 
         event.preventDefault();
 
+        await sendForm();
+    }
+
+    const onInputChange = (e) => {
+        setIsInputTextEmpty(e.target.value === '' ? true : false );
+    }
+
+    const sendForm = async () => {
         if (inputRef.current.value === '') return
 
         const messageText = inputRef.current.value;
 
         inputRef.current.value = '';
 
+        setSelectedMessage();
+        
         await sendMessageAndUpdateLastGroupMessage(messageText);
-    }
-
-    const onInputChange = (e) => {
-        setIsInputTextEmpty(e.target.value === '' ? true : false );
     }
 
     const handleClose = () => {
@@ -44,32 +50,40 @@ const MessageInput = () => {
 
     const debouncedOnInputChange = useDebounce(onInputChange, 200);
 
-    return <>
-        { isEmojiTabOpen &&
-            <EmojiPicker previewConfig={{showPreview:false}} height={300} onEmojiClick={() => {}} />
+    const onEnterPress = async (e) => {
+        if(e.keyCode == 13 && e.shiftKey == false) {
+            await sendForm()
         }
+    }
+
+    return <>
+{/*         { isEmojiTabOpen &&
+            <EmojiPicker previewConfig={{showPreview:false}} height={300} onEmojiClick={() => {}} />
+        } */}
         <form method='post' onSubmit={onSubmitMessage}>
 
-            {selectedMessage !== undefined ? <div className='message__reply'>
-                <div className='message__reply-content'>
-                    {selectedMessage.messageText}
-                </div>
-                <div className='message__reply-close' onClick={handleClose}>
-                    <X />
-                </div>
-            </div> : null}
+            { selectedMessage !== undefined ? 
+                <>
+                    <div className={'scale-up-ver-bottom message__reply message__reply--open'} >
+                        <div className='message__reply-content'>
+                            {selectedMessage?.messageText}
+                        </div>
+                        <div className='message__reply-close' onClick={handleClose}>
+                            <X />
+                        </div>
+                    </div>
+                </> : null
+             }
 
             <div className='message-input'>
                 <div className='message-input__options'>
                     <div className='message-input__emoji'>
                         <Smile onClick={() => setIsEmojiTabOpen(prevState => !prevState)} />
                     </div>
-                    <div className='message-input__attachments'>
-                         <FileInput onChange={(event) => uploadFile(event)} />
-                    </div>
+                    <FileInput onChange={(event) => uploadFile(event)} />
                 </div>
                 <div className='message-input__input-wrapper'>
-                    <textarea cols="10" wrap="soft" ref={inputRef} placeholder={'Type a message'} onChange={debouncedOnInputChange} className='message-input__input' type={'text'} name={'message'} />
+                    <textarea onKeyDown={onEnterPress} cols="5" rows={1} wrap="soft" ref={inputRef} placeholder={'Type a message'} onChange={debouncedOnInputChange} className='message-input__input' type={'text'} name={'message'} />
                 </div>
                 <div className='message-input__send'>
                     <button type='submit' disabled={isInputTextEmpty} className='message-input__send-button'>
@@ -77,6 +91,7 @@ const MessageInput = () => {
                     </button>
                 </div>
             </div>
+
         </form>
     </>
 }
@@ -84,10 +99,12 @@ const MessageInput = () => {
 
 const FileInput = ({ onChange }) => {
 
-    return <div>
+    return <>
             <input id='file' onChange={onChange} type={'file'} hidden />
-            <label htmlFor='file' className='message-input__attachments'><Paperclip /></label>
-        </div>
+            <label htmlFor='file' className='message-input__attachments'>
+                <Paperclip className='file-input' />
+            </label>
+        </>
 
 }
 
