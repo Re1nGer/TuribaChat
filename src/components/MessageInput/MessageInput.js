@@ -1,10 +1,10 @@
 import React, { useContext, useRef } from 'react';
-import { Smile, Paperclip, Send, X, Copy } from 'react-feather';
-import EmojiPicker from 'emoji-picker-react';
+import { Smile, Paperclip, Send, X } from 'react-feather';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
 import useDebounce from '../../hooks/useDebounce';
 import { AuthContext } from '../../context/AuthContext';
+import useSignalR from '../../hooks/useSignalR';
 
 
 const MessageInput = () => {
@@ -13,34 +13,29 @@ const MessageInput = () => {
 
     const { sendMessageAndUpdateLastGroupMessage, uploadFile } = useChat();
 
-    const { selectedMessage, setSelectedMessage } = useContext(AuthContext);
-
-    console.log(selectedMessage);
+    const { selectedMessage, setSelectedMessage, currentUser } = useContext(AuthContext);
 
     const [isInputTextEmpty, setIsInputTextEmpty] = React.useState(true);
+
+    const { connection } = useSignalR();
 
     const inputRef = useRef();
 
     const onSubmitMessage = async (event) => {
-
         event.preventDefault();
-
         await sendForm();
     }
 
-    const onInputChange = (e) => {
+    const onInputChange = async (e) => {
+        if (connection) await connection.send('StartTyping', currentUser?.displayName);
         setIsInputTextEmpty(e.target.value === '' ? true : false );
     }
 
     const sendForm = async () => {
         if (inputRef.current.value === '') return
-
         const messageText = inputRef.current.value;
-
         inputRef.current.value = '';
-
         setSelectedMessage();
-        
         await sendMessageAndUpdateLastGroupMessage(messageText);
     }
 
@@ -48,7 +43,7 @@ const MessageInput = () => {
         setSelectedMessage();
     }
 
-    const debouncedOnInputChange = useDebounce(onInputChange, 200);
+    const debouncedOnInputChange = useDebounce(onInputChange, 100);
 
     const onEnterPress = async (e) => {
         if(e.keyCode == 13 && e.shiftKey == false) {
@@ -57,9 +52,6 @@ const MessageInput = () => {
     }
 
     return <>
-{/*         { isEmojiTabOpen &&
-            <EmojiPicker previewConfig={{showPreview:false}} height={300} onEmojiClick={() => {}} />
-        } */}
         <form method='post' onSubmit={onSubmitMessage}>
 
             { selectedMessage !== undefined ? 

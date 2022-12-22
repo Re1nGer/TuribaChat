@@ -5,8 +5,7 @@ import DefaultRoom from './DefaultRoom';
 import { useParams } from 'react-router-dom';
 import './ChatRoom.scss';
 import SelectedRoom from './SelectedRoom';
-import { query, onSnapshot, where, getDocs, collection, doc, arrayUnion, updateDoc, getDoc } from 'firebase/firestore';
-import { child, get } from 'firebase/database';
+import { onSnapshot, doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import DefaultRoomImage from './images/avatardefault.png';
 
@@ -24,7 +23,7 @@ const ChatRoom = () => {
         try {
             const chatGroupQuery = doc(db, 'chatRooms', selectedRoomId);
 
-            const roomSnap = await getDocs(chatGroupQuery);
+            const roomSnap = await getDoc(chatGroupQuery);
 
             setGroupMetadata(roomSnap.data());
 
