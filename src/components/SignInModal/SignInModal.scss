@@ -19,24 +19,27 @@
     }
 
     &-button {
-        border-radius: 100px;
-        width: 50%;
-        padding: 10px;
-        background-image: linear-gradient(to right, rgb(75, 157, 235),rgb(140, 245, 140),orange,rgba(240, 56, 56, 0.699));
-        color: #FFFFFF;
+        border-radius: 50px;
+        gap: .5rem;
+        padding: 10px 20px;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        color: #4c8bf5;
+        border: 2px #4c8bf5 solid;
+        background: #fff;
         margin-top: 25px;
         transition: all .3s linear;
         margin: 55px auto 10px auto;
+        cursor: pointer;
     }
     &-button:hover {
-        color: rgba(255, 255, 255, 1);
         box-shadow: 0 5px 15px rgba(145, 92, 182, .4);
     }
 }
 
 
 .btn {
-    border: none;
     display: block;
     cursor: pointer;
 
@@ -69,5 +72,4 @@
     &--github:focus {
         outline: none;
     }
-
 }

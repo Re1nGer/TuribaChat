@@ -14,12 +14,16 @@
         padding: 1rem;
         display: flex;
         justify-content: space-between;
-        align-items: center;
     }
 
     &__metadata {
         display: flex;
         align-items: center;
+        &-typing { 
+            transition: all .2s linear;
+            font-size: 12px;
+        }
+
         &-picture {
             margin-right: .5rem;
             img {

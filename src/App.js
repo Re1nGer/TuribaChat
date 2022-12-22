@@ -6,6 +6,7 @@ import ProtectedRoute from './ProtectedRoute'
 import DashboardView from './pages/DashboardView';
 import WildCardView from './pages/WildCardView';
 import './App.scss';
+import SignalR from './pages/SignalR';
 
 export function App() {
 
@@ -19,6 +20,7 @@ export function App() {
                         <Route path='/dashboard' element={<DashboardView />} />
                         <Route path='/dashboard/:groupId' element={<DashboardView />} />
                     </Route>
+                    <Route path='/test' element={<SignalR />} />
                     <Route path='*' element={<WildCardView />} />
                 </Route>
             </Routes>

@@ -3,10 +3,8 @@ import Sidebar from '../Sidebar/Sidebar';
 import ChatRoom from '../ChatRoom/ChatRoom';
 import './Dashboard.scss';
 import { AuthContext } from '../../context/AuthContext';
-import { query, where, collection, onSnapshot, setDoc, arrayUnion, doc } from 'firebase/firestore';
+import { query, where, collection, onSnapshot, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
-
-
 
 const Dashboard = ({ groupId }) => {
 
@@ -31,9 +29,8 @@ const Dashboard = ({ groupId }) => {
     const setGroup = () => {
         const docRef = doc(db, "chatRooms", groupId);
         if (currentUser?.uid)
-            setDoc(docRef, { members: arrayUnion(currentUser.uid) })
+            updateDoc(docRef, { members: arrayUnion(currentUser.uid) })
     }
-
 
     React.useEffect(() => {
         if (groupId) setGroup();

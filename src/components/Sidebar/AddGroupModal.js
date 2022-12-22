@@ -5,6 +5,8 @@ import './Modal.scss';
 import { AuthContext } from '../../context/AuthContext';
 import { ModalLink } from './ModalLink';
 
+//const link =  process.env.LINK || "";
+
 const AddGroupModal = ({open, setIsOpen}) => {
 
     const { currentUser } = useContext(AuthContext);
@@ -23,7 +25,7 @@ const AddGroupModal = ({open, setIsOpen}) => {
 
             if (!groupName.value) return;
 
-            const docRef = await addDoc(collection(db, "chatRooms"), {
+            const docRef = await addDoc(collection(db, 'chatRooms'), {
                 createdAt: serverTimestamp(),
                 createdBy: currentUser.uid,
                 members: Array(currentUser.uid),
@@ -31,13 +33,11 @@ const AddGroupModal = ({open, setIsOpen}) => {
                 recentMessage: { message: '' }
             });
 
-            inputRef.current.value = "";
+            inputRef.current.value = '';
 
-            await setDoc(doc(db ,'messages', docRef.id), {
-                messages: []
-            });
+            await setDoc(doc(db ,'messages', docRef.id), { messages: [] });
 
-            const link = `http://localhost:3000/dashboard/${docRef.id}`
+            const link = `https://turibachatapp.web.app/dashboard/${docRef.id}`;
 
             setGroupLink(link);
 
@@ -49,6 +49,7 @@ const AddGroupModal = ({open, setIsOpen}) => {
 
     const handleCloseAddGroupModal = () => {
         setIsOpen(false);
+        setGroupLink('');
     }
 
     React.useEffect(() => {
