@@ -2,9 +2,6 @@ import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
-import { collection, query } from "firebase/firestore";
-import { where } from "firebase/firestore";
-import { onSnapshot } from "firebase/firestore";
 import useDebounce from '../hooks/useDebounce';
 
 const useSignalR = () => {
@@ -22,7 +19,7 @@ const useSignalR = () => {
 
     const onUserTypingStatusChange = (username) => {
         setGroupUsers(prevState => ({...prevState, [username]: true}));
-        setTimeout(() => setGroupUsers(prevState => ({...prevState, [username]: false})), 1000);
+        setTimeout(() => setGroupUsers(prevState => ({...prevState, [username]: false})), 700);
     }
 
     const debouncedTyping = useDebounce(onUserTypingStatusChange, 300);
@@ -40,12 +37,11 @@ const useSignalR = () => {
         if (connection) {
             connection.start().then(() => {
                 connection.on("ReceiveTypingStatus", debouncedTyping);
-                })
-            .catch((error) => console.log(error));
+            }).catch(error => console.log(error));
         }
         return () => connection?.stop();
 
-    },[connection])
+    },[])
 
     useEffect(() => {
 

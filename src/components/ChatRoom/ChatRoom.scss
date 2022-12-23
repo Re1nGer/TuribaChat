@@ -149,14 +149,39 @@
     background: #eee;
     margin: 8px 0;
     max-width: 450px;
-    font-size: 14px;
+    font-size: 18px;
     line-height: 1.4;
     position: relative;
     border:1px solid #ccc;
+     &.loading {
+      &::before {
+        @include ball;
+        border: none;
+        animation-delay: .15s;
+        animation-duration: 1s;
+      }
+      & span {
+        display: block;
+        font-size: 0;
+        width: 20px;
+        height: 10px;
+        position: relative;
+        &::before {
+          @include ball;
+          margin-left: -7px;
+        }
+        &::after {
+          @include ball;
+          margin-left: 7px;
+          animation-delay: .3s;
+          animation-duration: 1s;
+        }
+      }
+    }
 
     &-by {
         position: relative;
-        font-size: 10px;
+        font-size: 14px;
         color: #555;
         text-align: right;
     }

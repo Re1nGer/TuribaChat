@@ -4,7 +4,7 @@ import { AuthContext } from '../../context/AuthContext';
 import RoomFile from './RoomFile';
 import dayjs from 'dayjs';
 
-const ChatRoomMessage = ({ message, lastOurMessage, lastTheirMessage, breaking }) => {
+const ChatRoomMessage = ({ message, breaking }) => {
 
     //const [isOurs, setIsOurs] = React.useState(false);
 

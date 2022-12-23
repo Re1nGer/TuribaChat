@@ -22,17 +22,22 @@ const MessageInput = ({ connection }) => {
 
     const [isInputTextEmpty, setIsInputTextEmpty] = React.useState(true);
 
+    const [inputText, setInputText] = React.useState('');
+
     const inputRef = useRef();
 
     const onInputChange = async (e) => {
-        //if (connection) await connection.send('StartTyping', currentUser?.uid);
         setIsInputTextEmpty(e.target.value === '' ? true : false );
+        setInputText(e.target.value);
+        if (connection) await connection.send('StartTyping', currentUser?.uid);
     }
 
     const sendForm = async () => {
         if (inputRef.current.value === '') return
-        const messageText = inputRef.current.value;
-        inputRef.current.value = '';
+        //const messageText = inputRef.current.value;
+        //inputRef.current.value = '';
+        const messageText = inputText;
+        setInputText('')
         setSelectedMessage();
         try {
             await sendMessageAndUpdateLastGroupMessage(messageText);
@@ -49,8 +54,6 @@ const MessageInput = ({ connection }) => {
         setSelectedMessage();
     }
 
-    const debouncedOnInputChange = useDebounce(onInputChange, 300);
-
     const onEnterPress = async (e) => {
         if(e.keyCode == 13 && e.shiftKey == false) {
             await sendForm()
@@ -58,10 +61,13 @@ const MessageInput = ({ connection }) => {
     }
 
     React.useEffect(() => {
-        if (inputRef.current)
-            inputRef.current.value+=emoji;
-        console.log(inputRef.current);
+        if (emoji)
+            setInputText(prevState => prevState.concat(emoji.emoji));
+        setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
     },[emoji])
+
+    if (inputRef.current)
+        inputRef.current.focus()
 
     return <>
         <form method='post' onSubmit={onSubmitMessage}>
@@ -94,10 +100,11 @@ const MessageInput = ({ connection }) => {
                         wrap="soft"
                         ref={inputRef}
                         placeholder={'Type a message'}
-                        onChange={debouncedOnInputChange}
+                        onChange={onInputChange}
                         className='message-input__input'
                         type={'text'}
                         name={'message'}
+                        value={inputText}
                     />
                 </div>
                 <div className='message-input__send'>

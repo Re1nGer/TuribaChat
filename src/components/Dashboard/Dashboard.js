@@ -42,7 +42,7 @@ const Dashboard = ({ groupId }) => {
         <div className='dashboard'>
             <Sidebar groups={groups} />
             <ChatRoom />
-            { isEmojiTabOpen ? <EmojiPicker onEmojiClick={(e) => setEmoji(e.emoji)} lazyLoadEmojis height={'100%'} /> : null }
+            { isEmojiTabOpen ? <EmojiPicker autoFocusSearch={false} emojiStyle='twitter' theme='light' emojiVersion={'5.0'} onEmojiClick={(e) => setEmoji(e)} lazyLoadEmojis height={'100%'} /> : null }
         </div>
     </>
 }

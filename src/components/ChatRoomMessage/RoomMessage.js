@@ -2,20 +2,13 @@ import dayjs from 'dayjs';
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import './ChatRoomMessage.scss';
-import MessageActions from './MessageActions';
-import { MessageReply } from './MessageReply';
-
 
 const RoomMessage = ({ message }) => {
-
-    const hasReplyMessage = message.replyTo;
 
     const { currentUser } = useContext(AuthContext);
 
     const {
-        sentByName,
         messageText,
-        replyTo,
         sentAt,
         sentBy
     } = message || {};
