@@ -18,6 +18,10 @@ export const AuthContextProvider = ({children}) => {
 
     const [connection, setConnection] = useState();
 
+    const [isEmojiTabOpen, setIsEmojiTabOpen] = React.useState(false);
+
+    const [emoji, setEmoji] = React.useState();
+
     React.useEffect(() => {
         const unsubsribe = onAuthStateChanged(auth, user => {
             setCurrentUser(user);
@@ -27,13 +31,14 @@ export const AuthContextProvider = ({children}) => {
     },[])
 
     React.useEffect(() => {
-        const connect = new signalR.HubConnectionBuilder()
-            .withUrl('http://localhost:5259/Chat')
-            .withAutomaticReconnect()
-            .build();
-    
-        setConnection(connect);
-
+        if (!connection) {
+            const connect = new signalR.HubConnectionBuilder()
+                .withUrl('http://localhost:5259/Chat')
+                .withAutomaticReconnect()
+                .build();
+        
+            setConnection(connect);
+        }
     },[])
 
     const value = {
@@ -43,7 +48,11 @@ export const AuthContextProvider = ({children}) => {
         selectedRoomId,
         setSelectedRoomId,
         currentUser,
-        connection
+        connection,
+        setIsEmojiTabOpen,
+        isEmojiTabOpen,
+        setEmoji,
+        emoji
     };
 
     return (<AuthContext.Provider value={value}>

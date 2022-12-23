@@ -1,52 +1,33 @@
-import React, { useContext, useState } from 'react';
+import dayjs from 'dayjs';
+import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import './ChatRoomMessage.scss';
+import MessageActions from './MessageActions';
+import { MessageReply } from './MessageReply';
 
 
-const RoomMessage = ({ messageText }) => {
+const RoomMessage = ({ message }) => {
 
-    const { setSelectedMessage } = useContext(AuthContext);
+    const hasReplyMessage = message.replyTo;
 
-    const [selectValue, setSelectValue] = useState('');
+    const { currentUser } = useContext(AuthContext);
 
-    const handleSelect = (event) => {
-        console.log(event);
-        if (event.target.value === 'reply') {
-            setSelectedMessage(messageText);
-            setSelectValue(null);
-        }
-        setSelectValue(event.target.value);
-    }
-
-    const hasReplyMessage = messageText.replyTo;
+    const {
+        sentByName,
+        messageText,
+        replyTo,
+        sentAt,
+        sentBy
+    } = message || {};
 
     return (
-        <div className='message__content'>
-            <div className='message__content-header'>
-                <div>{messageText?.sentByName}</div>
-                <select value={selectValue} className='select' onChange={handleSelect}>
-                    <option defaultChecked disabled value={null}></option>
-                    <option value={'reply'}>Reply</option>
-                    <option value={'something else'}>Something else</option>
-                </select>
-            </div>
-            { hasReplyMessage ? 
-                <div className='message__replyTo'>
-                    <div className='message__replyTo-user'>
-                        {messageText.replyTo.sentByName}
-                    </div>
-                    <div className='message__replyTo-content'>
-                        {messageText.replyTo.messageText}
-                    </div>
-                    </div>
-                : null
-            }
-            <p className='message__content-body'>
-                {messageText.messageText}
-            </p>
+        <div className={`message__new new ${currentUser?.uid === sentBy ? 'message__new-ours' : ''}` }>
+            {messageText}
+            <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
+            <div className='checkmark-sent-delivered'>&#x2713;</div>
+            <div className='checkmark-read'>&#x2713;</div>
         </div>
     )
 }
-
 
 export default RoomMessage;

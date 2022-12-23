@@ -1,4 +1,4 @@
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
 import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
 import { uploadBytes, getStorage, ref } from 'firebase/storage';
 import { db } from '../../firebase';
@@ -37,6 +37,7 @@ const useChat = () => {
         });
     }
 
+
     const uploadFile = async (event) => {
 
         const file = event.target.files[0];
@@ -70,7 +71,7 @@ const useChat = () => {
         });
     }
 
-    return { sendMessageAndUpdateLastGroupMessage, uploadFile }
+    return { sendMessageAndUpdateLastGroupMessage, uploadFile  }
 }
 
 

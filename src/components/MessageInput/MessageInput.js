@@ -4,30 +4,28 @@ import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
 import useDebounce from '../../hooks/useDebounce';
 import { AuthContext } from '../../context/AuthContext';
-import useSignalR from '../../hooks/useSignalR';
 
 
-const MessageInput = () => {
-
-    const [isEmojiTabOpen, setIsEmojiTabOpen] = React.useState(false);
+const MessageInput = ({ connection }) => {
 
     const { sendMessageAndUpdateLastGroupMessage, uploadFile } = useChat();
 
-    const { selectedMessage, setSelectedMessage, currentUser } = useContext(AuthContext);
+    const { 
+        selectedMessage,
+        setSelectedMessage,
+        setIsEmojiTabOpen,
+        isEmojiTabOpen,
+        emoji,
+        currentUser,
+        selectedRoomId
+     } = useContext(AuthContext);
 
     const [isInputTextEmpty, setIsInputTextEmpty] = React.useState(true);
 
-    const { connection } = useSignalR();
-
     const inputRef = useRef();
 
-    const onSubmitMessage = async (event) => {
-        event.preventDefault();
-        await sendForm();
-    }
-
     const onInputChange = async (e) => {
-        if (connection) await connection.send('StartTyping', currentUser?.displayName);
+        //if (connection) await connection.send('StartTyping', currentUser?.uid);
         setIsInputTextEmpty(e.target.value === '' ? true : false );
     }
 
@@ -36,20 +34,34 @@ const MessageInput = () => {
         const messageText = inputRef.current.value;
         inputRef.current.value = '';
         setSelectedMessage();
-        await sendMessageAndUpdateLastGroupMessage(messageText);
+        try {
+            await sendMessageAndUpdateLastGroupMessage(messageText);
+            //if (connection) await connection.send('SendNotification', selectedRoomId);
+        } catch (error) {}
+    }
+
+    const onSubmitMessage = async (event) => {
+        event.preventDefault();
+        await sendForm();
     }
 
     const handleClose = () => {
         setSelectedMessage();
     }
 
-    const debouncedOnInputChange = useDebounce(onInputChange, 100);
+    const debouncedOnInputChange = useDebounce(onInputChange, 300);
 
     const onEnterPress = async (e) => {
         if(e.keyCode == 13 && e.shiftKey == false) {
             await sendForm()
         }
     }
+
+    React.useEffect(() => {
+        if (inputRef.current)
+            inputRef.current.value+=emoji;
+        console.log(inputRef.current);
+    },[emoji])
 
     return <>
         <form method='post' onSubmit={onSubmitMessage}>
@@ -70,12 +82,23 @@ const MessageInput = () => {
             <div className='message-input'>
                 <div className='message-input__options'>
                     <div className='message-input__emoji'>
-                        <Smile onClick={() => setIsEmojiTabOpen(prevState => !prevState)} />
+                        <Smile className={`message-input__emoji ${isEmojiTabOpen ? 'message-input__emoji--active': ''}`} onClick={() => setIsEmojiTabOpen(prevState => !prevState)} />
                     </div>
                     <FileInput onChange={(event) => uploadFile(event)} />
                 </div>
                 <div className='message-input__input-wrapper'>
-                    <textarea onKeyDown={onEnterPress} cols="5" rows={1} wrap="soft" ref={inputRef} placeholder={'Type a message'} onChange={debouncedOnInputChange} className='message-input__input' type={'text'} name={'message'} />
+                    <textarea
+                        onKeyDown={onEnterPress}
+                        cols="5"
+                        rows={1}
+                        wrap="soft"
+                        ref={inputRef}
+                        placeholder={'Type a message'}
+                        onChange={debouncedOnInputChange}
+                        className='message-input__input'
+                        type={'text'}
+                        name={'message'}
+                    />
                 </div>
                 <div className='message-input__send'>
                     <button type='submit' disabled={isInputTextEmpty} className='message-input__send-button'>

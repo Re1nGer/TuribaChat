@@ -1,7 +1,11 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
+import { collection, query } from "firebase/firestore";
+import { where } from "firebase/firestore";
+import { onSnapshot } from "firebase/firestore";
+import useDebounce from '../hooks/useDebounce';
 
 const useSignalR = () => {
 
@@ -9,41 +13,43 @@ const useSignalR = () => {
 
     const [usersOnlineStatus, setUsersOnlineStatus] = useState([]);
 
-    const [groupUsers, setGroupUsers]  = useState([]);
+    const [groupUsers, setGroupUsers]  = useState({});
 
-    const { connection, selectedRoomId } = useContext(AuthContext);
+    //an object which contains groupIds as keys and values as number of unread messages
+    const [groupNotifications, setGroupNotifications] = useState({});
 
-    const onUserTypingStatusChange = async (username) => {
-        if (!usersTypingStatus.includes(username))
-            setUsersTypingStatus(prevState => [...prevState, username]);
+    const { connection, selectedRoomId, currentUser } = useContext(AuthContext);
 
-        setTimeout(() => setUsersTypingStatus(prevState => [...prevState.filter(item => item !== username)]), 100);
+    const onUserTypingStatusChange = (username) => {
+        setGroupUsers(prevState => ({...prevState, [username]: true}));
+        setTimeout(() => setGroupUsers(prevState => ({...prevState, [username]: false})), 1000);
     }
 
+    const debouncedTyping = useDebounce(onUserTypingStatusChange, 300);
+
     const fetchGroupUsers = async () => {
+
         const group = doc(db, 'chatRooms', selectedRoomId);
 
         const docs = await getDoc(group);
 
-        setGroupUsers(docs.data().members);
+        setGroupUsers(docs.data().members.reduce((a, v) => ({ ...a, [v]: false }), {}));
     }
 
     useEffect(() => {
         if (connection) {
             connection.start().then(() => {
-                connection.on("ReceiveTypingStatus", (username) => {
-                    onUserTypingStatusChange(username);
-                });
+                connection.on("ReceiveTypingStatus", debouncedTyping);
                 })
             .catch((error) => console.log(error));
         }
+        return () => connection?.stop();
 
     },[connection])
 
     useEffect(() => {
 
-        if (selectedRoomId)
-            fetchGroupUsers();
+        if (selectedRoomId) fetchGroupUsers();
 
     },[selectedRoomId])
 
@@ -51,7 +57,8 @@ const useSignalR = () => {
         connection,
         usersOnlineStatus,
         usersTypingStatus,
-        groupUsers
+        groupUsers,
+        groupNotifications
     }
 }
 

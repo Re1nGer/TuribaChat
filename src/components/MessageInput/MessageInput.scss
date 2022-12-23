@@ -13,6 +13,16 @@
 
     &__emoji {
         cursor: pointer;
+
+        transition: color .2s linear;
+
+        &:hover {
+            color: #00d9ffb0;
+        }
+
+        &--active {
+            color: #00d9ffb0;
+        }
     }
 
     &__attachments {
@@ -131,8 +141,4 @@
             justify-content: flex-end;
         }
     }
-}
-
-.file-input {
-
 }

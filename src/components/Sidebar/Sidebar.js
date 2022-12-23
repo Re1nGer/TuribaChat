@@ -5,6 +5,7 @@ import { AuthContext } from '../../context/AuthContext';
 import SideNav from '../SideNav/SideNav';
 import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DefaultAvatarImage from './assets/avatardefault.png';
+import useNotification from '../../hooks/useNotification';
 
 
 const Sidebar = ({groups}) => {
@@ -12,6 +13,8 @@ const Sidebar = ({groups}) => {
     const [sidenavOpen, setSidenavOpen] = React.useState(false);
 
     const { currentUser } = useContext(AuthContext);
+
+    const { groupNotifications } = useNotification();
 
     return <>
         <div style={{position: 'relative'}}>

@@ -41,10 +41,162 @@
     }
 
     &__messages {
-        padding: 0 1rem;
         overflow-y: auto;
         word-wrap: break-word;
         height: 100%;
+
+
+        &-typing {
+            transition: all 1s ease-in;
+        }
+    }
+}
+
+@keyframes bounce {
+  0% {
+    transform: matrix3d(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  4.7% {
+    transform: matrix3d(0.45, 0, 0, 0, 0, 0.45, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  9.41% {
+    transform: matrix3d(0.883, 0, 0, 0, 0, 0.883, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  14.11% {
+    transform: matrix3d(1.141, 0, 0, 0, 0, 1.141, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  18.72% {
+    transform: matrix3d(1.212, 0, 0, 0, 0, 1.212, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  24.32% {
+    transform: matrix3d(1.151, 0, 0, 0, 0, 1.151, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  29.93% {
+    transform: matrix3d(1.048, 0, 0, 0, 0, 1.048, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  35.54% {
+    transform: matrix3d(0.979, 0, 0, 0, 0, 0.979, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  41.04% {
+    transform: matrix3d(0.961, 0, 0, 0, 0, 0.961, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  52.15% {
+    transform: matrix3d(0.991, 0, 0, 0, 0, 0.991, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  63.26% {
+    transform: matrix3d(1.007, 0, 0, 0, 0, 1.007, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  85.49% {
+    transform: matrix3d(0.999, 0, 0, 0, 0, 0.999, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+  100% {
+    transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+  }
+}
+@keyframes ball {
+  from {
+    transform: translateY(0) scaleY(.8);
+  }
+  to {
+    transform: translateY(-10px);
+  }
+}
+
+@mixin ball {
+  position: relative;
+  content: '';
+  display: block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+/*  background: rgba(255, 255, 255, .5);*/
+  background:#888;
+  z-index: 2;
+  margin-top: 4px;
+  animation: ball .45s cubic-bezier(0, 0, 0.15, 1) alternate infinite;
+}
+
+.scale-up-center {
+	-webkit-animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+	        animation: scale-up-center 0.4s cubic-bezier(0.390, 0.575, 0.565, 1.000) both;
+}
+
+@-webkit-keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+@keyframes scale-up-center {
+  0% {
+    -webkit-transform: scale(0.5);
+            transform: scale(0.5);
+  }
+  100% {
+    -webkit-transform: scale(1);
+            transform: scale(1);
+  }
+}
+.message__new {
+    padding: 6px 10px 7px;
+    -webkit-border-radius: 20px 20px 20px 0;
+    -moz-border-radius: 20px 20px 20px 0;
+    border-radius: 20px 20px 20px 0; 
+    background: #eee;
+    margin: 8px 0;
+    max-width: 450px;
+    font-size: 14px;
+    line-height: 1.4;
+    position: relative;
+    border:1px solid #ccc;
+
+    &-by {
+        position: relative;
+        font-size: 10px;
+        color: #555;
+        text-align: right;
+    }
+
+    .timestamp {
+      position: absolute;
+      bottom: -15px;
+      font-size: 10px;
+      color: #555;
+      right:30px;
+      /* color: rgba(255, 255, 255, .7);*/
+      
+    }
+    .checkmark-sent-delivered {
+      position: absolute;
+      bottom: -15px;
+      right: 10px;
+      font-size:12px;
+      color:#999;
+    }
+    .checkmark-read {
+      color:blue;
+      position: absolute;
+      bottom: -15px;
+      right: 16px;
+      font-size:12px;
+    }
+
+    &.new {
+      transform: scale(0);
+      transform-origin: 0 0;
+      animation: bounce 500ms linear both;
+    }
+
+    &-ours {
+      background:#fff;
+      border:1px solid #ccc;
+      -webkit-border-radius: 20px 20px 0 20px;
+      -moz-border-radius: 20px 20px 0 20px;
+      border-radius: 20px 20px 0 20px;
     }
 }
 

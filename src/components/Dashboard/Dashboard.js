@@ -5,12 +5,13 @@ import './Dashboard.scss';
 import { AuthContext } from '../../context/AuthContext';
 import { query, where, collection, onSnapshot, arrayUnion, doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
+import EmojiPicker from 'emoji-picker-react';
 
 const Dashboard = ({ groupId }) => {
 
     const [groups, setGroups] = React.useState([]);
 
-    const { currentUser } = React.useContext(AuthContext);
+    const { currentUser, isEmojiTabOpen, setEmoji } = React.useContext(AuthContext);
 
     const fetchGroups = () => {
         if (currentUser?.uid) {
@@ -41,6 +42,7 @@ const Dashboard = ({ groupId }) => {
         <div className='dashboard'>
             <Sidebar groups={groups} />
             <ChatRoom />
+            { isEmojiTabOpen ? <EmojiPicker onEmojiClick={(e) => setEmoji(e.emoji)} lazyLoadEmojis height={'100%'} /> : null }
         </div>
     </>
 }
