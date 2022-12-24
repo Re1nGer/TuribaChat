@@ -27,7 +27,7 @@ export const AuthContextProvider = ({children}) => {
             setCurrentUser(user);
             setIsLoggedIn(user ? true : false);
         });
-        return unsubsribe;
+        return () => unsubsribe;
     },[])
 
     React.useEffect(() => {

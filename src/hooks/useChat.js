@@ -1,10 +1,9 @@
-import { useContext, useState } from 'react';
+import { useContext } from 'react';
 import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
 import { uploadBytes, getStorage, ref } from 'firebase/storage';
 import { db } from '../../firebase';
 import { AuthContext } from '../context/AuthContext';
 import {v4 as uuidv4} from 'uuid';
-import { getMessaging, onMessage } from "firebase/messaging";
 
 
 const useChat = () => {
@@ -51,10 +50,12 @@ const useChat = () => {
         uploadBytes(storageRef, file, metadata);
 
         const message = {
+            id: uuidv4(),
             type: 'file',
             messageText: '',
             isRead: false,
             fileName: file.name,
+            sentByName: currentUser.displayName,
             sentAt: new Date(),
             sentBy: currentUser.uid,
             contentType: file.type,

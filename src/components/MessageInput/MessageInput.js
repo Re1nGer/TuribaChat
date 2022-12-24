@@ -2,8 +2,8 @@ import React, { useContext, useRef } from 'react';
 import { Smile, Paperclip, Send, X } from 'react-feather';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
-import useDebounce from '../../hooks/useDebounce';
 import { AuthContext } from '../../context/AuthContext';
+import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
 
 const MessageInput = ({ connection }) => {
@@ -37,7 +37,7 @@ const MessageInput = ({ connection }) => {
         //const messageText = inputRef.current.value;
         //inputRef.current.value = '';
         const messageText = inputText;
-        setInputText('')
+        setInputText([])
         setSelectedMessage();
         try {
             await sendMessageAndUpdateLastGroupMessage(messageText);
@@ -62,12 +62,13 @@ const MessageInput = ({ connection }) => {
 
     React.useEffect(() => {
         if (emoji)
-            setInputText(prevState => prevState.concat(emoji.emoji));
+            setInputText(prevState => prevState.concat(emoji.unified));
         setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
     },[emoji])
 
-    if (inputRef.current)
-        inputRef.current.focus()
+    if (inputRef.current) inputRef.current.focus()
+
+    useAutosizeTextArea(inputRef.current, inputText);
 
     return <>
         <form method='post' onSubmit={onSubmitMessage}>
@@ -95,17 +96,21 @@ const MessageInput = ({ connection }) => {
                 <div className='message-input__input-wrapper'>
                     <textarea
                         onKeyDown={onEnterPress}
-                        cols="5"
-                        rows={1}
-                        wrap="soft"
                         ref={inputRef}
                         placeholder={'Type a message'}
                         onChange={onInputChange}
                         className='message-input__input'
-                        type={'text'}
                         name={'message'}
                         value={inputText}
                     />
+{/*                     <div contentEditable={'true'}
+                        onKeyDown={onEnterPress}
+                        ref={inputRef}
+                        placeholder={'Type a message'}
+                        onChange={onInputChange}
+                        className='message-input__input'
+                        name={'message'}
+                    >{inputText.map(item => item?.unified ? <Emoji unified={item.unified} /> : item)}</div> */}
                 </div>
                 <div className='message-input__send'>
                     <button type='submit' disabled={isInputTextEmpty} className='message-input__send-button'>

@@ -3,6 +3,8 @@ import './ChatRoomMessage.scss';
 import { AuthContext } from '../../context/AuthContext';
 import RoomFile from './RoomFile';
 import dayjs from 'dayjs';
+import { Download } from 'react-feather';
+import { getStorage, ref, getBlob, getDownloadURL } from 'firebase/storage';
 
 const ChatRoomMessage = ({ message, breaking }) => {
 
@@ -19,19 +21,36 @@ const ChatRoomMessage = ({ message, breaking }) => {
         messageText,
         replyTo,
         sentAt,
-        sentBy
+        sentBy,
+        fileName,
+        size
     } = message || {};
 
     if (sentBy === currentUser.uid) isOurs.current = true;
 
     else isOurs.current = false;
 
+    const { selectedRoomId } = useContext(AuthContext);
+
+    const storage = getStorage();
+
+    const storageRef = ref(storage, `files/${selectedRoomId}/${fileName}`);
+
+    const handleDownload = (event) => {
+         getDownloadURL(storageRef)
+        .then((url) => { window.open(url,'_blank'); });
+    }
+    const getBytes = (bytes) => {
+        const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
+        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        let suffixIndx = i < 0 ? 0 : i;
+        return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sufixes[suffixIndx]}`;
+    }
+
     return <>
         <div className={isOurs.current === true ? 'chat-room_message ours': 'chat-room_message users'}>
             <div className={`${isOurs.current === true ? 'ours' : 'users' }`}>
                 { breaking === true ? <div className='message__new-by'>{`Sent by ${sentBy === currentUser.uid ? 'You' : sentByName}`}</div> : null }
-{/*             { lastOurMessage ? <div className='message__new-by'>{`Sent by you`}</div> : null } */}
-{/*             { lastTheirMessage ? <div className='message__new-by'>{`Sent by ${sentByName}`}</div> : null } */}
             {
                 message?.type === 'text' ? 
                 <div className={`message__new new ${isOurs.current === true ? 'message__new-ours' : ''}` }>
@@ -39,9 +58,26 @@ const ChatRoomMessage = ({ message, breaking }) => {
                     <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
                     <div className='checkmark-sent-delivered'>&#x2713;</div>
                     <div className='checkmark-read'>&#x2713;</div>
-                </div> : <RoomFile size={message?.size} fileName={message?.fileName} />
+                </div> : 
+                    <div className={`message__new new ${isOurs.current === true ? 'message__new-ours' : ''}` }>
+                        <div className='message__new-file'>
+                            <div className='message__new-file_download'>
+                                <Download size={22} onClick={handleDownload} />
+                            </div>
+                            <div className='message__new-file_description'>
+                                <div className='message__new-file_description-name'>
+                                    {fileName}
+                                </div>
+                                <span className='message__new-file_description-size'>
+                                    {getBytes(size)}
+                                </span>
+                            </div>
+                        </div>
+                        <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
+                        <div className='checkmark-sent-delivered'>&#x2713;</div>
+                        <div className='checkmark-read'>&#x2713;</div>
+                    </div> 
             }
-{/*                 { message?.type === 'text' ? <RoomMessage message={message} /> : <RoomFile size={message?.size} fileName={message?.fileName} />  } */}
             </div>
         </div>
     </>

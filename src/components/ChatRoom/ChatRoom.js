@@ -5,7 +5,7 @@ import DefaultRoom from './DefaultRoom';
 import { useParams } from 'react-router-dom';
 import './ChatRoom.scss';
 import SelectedRoom from './SelectedRoom';
-import { onSnapshot, doc, getDoc } from 'firebase/firestore';
+import { onSnapshot, doc, getDoc, limitToLast } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import DefaultRoomImage from './images/avatardefault.png';
 
@@ -34,13 +34,16 @@ const ChatRoom = () => {
 
     React.useEffect(() => {
         if (id) setSelectedRoomId(id);
-         
+        let subcribe = null;
         fetchGroupMetadata();
+
         if (selectedRoomId) {
-            onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
+            subcribe = onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
                 setMessages(document.data().messages);
-            });
+            }, limitToLast(25));
         }
+
+        return () => subcribe
         
     },[id, selectedRoomId])
 

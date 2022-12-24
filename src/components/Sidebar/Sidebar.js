@@ -14,8 +14,6 @@ const Sidebar = ({groups}) => {
 
     const { currentUser } = useContext(AuthContext);
 
-    const { groupNotifications } = useNotification();
-
     return <>
         <div style={{position: 'relative'}}>
             <SideNav isOpen={sidenavOpen} setIsOpen={setSidenavOpen}  />

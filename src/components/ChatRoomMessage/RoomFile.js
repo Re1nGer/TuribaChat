@@ -1,5 +1,5 @@
 import React, { useContext } from 'react';
-import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, getDownloadURL, getStream } from 'firebase/storage';
 import { AuthContext } from '../../context/AuthContext';
 import { File } from 'react-feather';
 
@@ -13,12 +13,14 @@ const RoomFile = ({ size, fileName }) => {
     const storageRef = ref(storage, `files/${selectedRoomId}/${fileName}`);
 
     const handleDownload = (event) => {
-        getDownloadURL(storageRef)
+        getStream(storageRef);
+/*         getDownloadURL(storageRef)
         .then((url) => { window.open(url,'_blank'); });
-        }
+        } */
+    }
 
     function humanFileSize(size) {
-        var i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
+        const i = size == 0 ? 0 : Math.floor(Math.log(size) / Math.log(1024));
     return (size / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
     return (

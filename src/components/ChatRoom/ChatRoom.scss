@@ -6,8 +6,10 @@
     background-size: cover; 
     height: 100%;
     display: flex;
+    transition: width .2s linear;
     flex-direction: column;
     justify-content: space-between;
+    overflow-x: hidden;
 
     &__header {
         background-color: #f0f2f5;
@@ -44,6 +46,7 @@
         overflow-y: auto;
         word-wrap: break-word;
         height: 100%;
+        overflow-x: hidden;
 
 
         &-typing {
@@ -153,6 +156,32 @@
     line-height: 1.4;
     position: relative;
     border:1px solid #ccc;
+
+    &-file {
+      display: flex;
+      justify-content: space-between;
+      gap: .5rem;
+
+      &_download {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+      }
+
+      &_description {
+        display: flex;
+        flex-direction: column;
+        
+        &-name {
+          font-size: 16px;
+        }
+
+        &-size {
+          font-size: 12px;
+        }
+      }
+    }
+
      &.loading {
       &::before {
         @include ball;
