@@ -9,6 +9,7 @@ import {
   addDoc,
 } from "firebase/firestore";
 import { getStorage, ref } from "firebase/storage"
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBjUOTa3AkgrjAD6l6Cj70ySecy8lfBka0",
@@ -22,6 +23,17 @@ const firebaseConfig = {
 };
 
 export const app = initializeApp(firebaseConfig);
+
+self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+
+const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaV3Provider('7C62364B-3648-4BA9-8FBE-B19963A75ADC'),
+
+  // Optional argument. If true, the SDK automatically refreshes App Check
+  // tokens as needed.
+  isTokenAutoRefreshEnabled: true
+});
+
 
 export const auth = getAuth();
 
