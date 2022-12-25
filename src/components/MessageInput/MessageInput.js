@@ -67,7 +67,7 @@ const MessageInput = ({ connection }) => {
 
     React.useEffect(() => {
         if (emoji) {
-            setInputText(prevState => [...prevState, emoji.emoji]);
+            setInputText(prevState => prevState.concat(emoji.emoji));
             //inputRef.current.innerHTML+=`<img src=${emoji.getImageUrl()}  />`
         }
         setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
