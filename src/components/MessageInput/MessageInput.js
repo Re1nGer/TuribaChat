@@ -3,6 +3,7 @@ import { Smile, Paperclip, Send, X } from 'react-feather';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
 import { AuthContext } from '../../context/AuthContext';
+import { Emoji } from 'emoji-picker-react';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
 
@@ -29,6 +30,9 @@ const MessageInput = ({ connection }) => {
     const onInputChange = async (e) => {
         setIsInputTextEmpty(e.target.value === '' ? true : false );
         setInputText(e.target.value);
+        //setIsInputTextEmpty(inputRef.current.innerHTML === '' ? true : false );
+        //setInputText([inputRef.current.innerHTML]);
+        //console.log(inputRef.current.innerHTML);
         if (connection) await connection.send('StartTyping', currentUser?.uid);
     }
 
@@ -36,7 +40,8 @@ const MessageInput = ({ connection }) => {
         if (inputRef.current.value === '') return
         //const messageText = inputRef.current.value;
         //inputRef.current.value = '';
-        const messageText = inputText;
+        const messageText = inputText; //inputText;
+        //inputRef.current.innerHTML = '';
         setInputText([])
         setSelectedMessage();
         try {
@@ -61,8 +66,10 @@ const MessageInput = ({ connection }) => {
     }
 
     React.useEffect(() => {
-        if (emoji)
-            setInputText(prevState => prevState.concat(emoji.unified));
+        if (emoji) {
+            setInputText(prevState => [...prevState, emoji.emoji]);
+            //inputRef.current.innerHTML+=`<img src=${emoji.getImageUrl()}  />`
+        }
         setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
     },[emoji])
 
@@ -94,7 +101,7 @@ const MessageInput = ({ connection }) => {
                     <FileInput onChange={(event) => uploadFile(event)} />
                 </div>
                 <div className='message-input__input-wrapper'>
-                    <textarea
+                     <textarea
                         onKeyDown={onEnterPress}
                         ref={inputRef}
                         placeholder={'Type a message'}
@@ -103,15 +110,15 @@ const MessageInput = ({ connection }) => {
                         name={'message'}
                         value={inputText}
                     />
-{/*                     <div contentEditable={'true'}
-                        onKeyDown={onEnterPress}
+{/*                      <div contentEditable={true}
+                        //onKeyDown={onEnterPress}
                         ref={inputRef}
-                        placeholder={'Type a message'}
-                        onChange={onInputChange}
+                        onInput={onInputChange}
+                        //onChange={onInputChange}
                         className='message-input__input'
-                        name={'message'}
-                    >{inputText.map(item => item?.unified ? <Emoji unified={item.unified} /> : item)}</div> */}
-                </div>
+                    >{inputText.map(item => item?.unified ? <Emoji size={16} unified={item.unified} /> : item)}
+                    </div> */}
+                    </div>
                 <div className='message-input__send'>
                     <button type='submit' disabled={isInputTextEmpty} className='message-input__send-button'>
                         <Send />

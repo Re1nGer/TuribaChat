@@ -16,8 +16,7 @@ const useAutosizeTextArea = (textAreaRef, value) => {
 
   useEffect(() => {
     if (textAreaRef) {
-        console.log(value);
-        if (value.trim() === '') {
+        if (value === '') {
             textAreaRef.style.height = '0px';
             textAreaRef.style.rows = '0';
             const scrollHeight = textAreaRef.scrollHeight;

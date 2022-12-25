@@ -1,6 +1,6 @@
-import { useContext } from 'react';
-import { updateDoc, doc, arrayUnion } from 'firebase/firestore';
-import { uploadBytes, getStorage, ref } from 'firebase/storage';
+import { useContext, useState } from 'react';
+import { updateDoc, doc, arrayUnion, deleteDoc, arrayRemove, getDoc } from 'firebase/firestore';
+import { uploadBytes, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { db } from '../../firebase';
 import { AuthContext } from '../context/AuthContext';
 import {v4 as uuidv4} from 'uuid';
@@ -9,6 +9,8 @@ import {v4 as uuidv4} from 'uuid';
 const useChat = () => {
 
     const { selectedRoomId, currentUser, selectedMessage } = useContext(AuthContext);
+
+    const [fileUploadStatus, setFileUploadStatus] = useState('');
 
     const sendMessageAndUpdateLastGroupMessage = async (inputMessage) => {
 
@@ -41,13 +43,22 @@ const useChat = () => {
 
         const file = event.target.files[0];
 
+        const fileSize = Math.round((file.size / 1024));
+
+        console.log(fileSize);
+
+        //file size too huge break...
+        if (fileSize > 4096) return;
+
         const metadata = { contentType: file.type };
 
         const storage = getStorage();
 
         const storageRef = ref(storage, `files/${selectedRoomId}/${file.name}`);
 
-        uploadBytes(storageRef, file, metadata);
+        const uploadTask = uploadBytesResumable(storageRef, file, metadata);
+
+        const { recentMessage } = (await getDoc(doc(db, 'chatRooms', selectedRoomId))).data() || {};
 
         const message = {
             id: uuidv4(),
@@ -64,15 +75,31 @@ const useChat = () => {
         };
 
         await updateDoc(doc(db, 'messages', selectedRoomId), {
-            messages: arrayUnion(message)
+            messages: arrayUnion(message),
         });
 
         await updateDoc(doc(db, 'chatRooms', selectedRoomId), {
             recentMessage: { message: file.name }
         });
+
+        uploadTask.on('state_changed', 
+
+            (snapshot) => {
+                // Observe state change events such as progress, pause, and resume
+                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                setFileUploadStatus(snapshot.state);
+                console.log(snapshot.state);
+            }, 
+            async (error) => {
+                // Handle unsuccessful uploads
+                console.log(error);
+                await updateDoc(doc(db, 'messages', selectedRoomId), { messages: arrayRemove(message) });
+
+                await updateDoc(doc(db, 'chatRooms', selectedRoomId), { recentMessage: { message: recentMessage.message } });
+            });
     }
 
-    return { sendMessageAndUpdateLastGroupMessage, uploadFile  }
+    return { sendMessageAndUpdateLastGroupMessage, uploadFile, fileUploadStatus };
 }
 
 

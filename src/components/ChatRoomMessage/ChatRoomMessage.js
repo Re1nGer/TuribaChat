@@ -1,10 +1,17 @@
 import React, { useContext, useRef } from 'react';
 import './ChatRoomMessage.scss';
 import { AuthContext } from '../../context/AuthContext';
-import RoomFile from './RoomFile';
 import dayjs from 'dayjs';
 import { Download } from 'react-feather';
 import { getStorage, ref, getBlob, getDownloadURL } from 'firebase/storage';
+import useChat from '../../hooks/useChat';
+
+const getBytes = (bytes) => {
+    const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(1024));
+    let suffixIndx = i < 0 ? 0 : i;
+    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sufixes[suffixIndx]}`;
+}
 
 const ChatRoomMessage = ({ message, breaking }) => {
 
@@ -32,20 +39,18 @@ const ChatRoomMessage = ({ message, breaking }) => {
 
     const { selectedRoomId } = useContext(AuthContext);
 
+    //const { fileUploadStatus } = useChat();
+
     const storage = getStorage();
 
     const storageRef = ref(storage, `files/${selectedRoomId}/${fileName}`);
 
     const handleDownload = (event) => {
          getDownloadURL(storageRef)
-        .then((url) => { window.open(url,'_blank'); });
+        .then((url) => window.open(url,'_blank'));
     }
-    const getBytes = (bytes) => {
-        const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
-        const i = Math.floor(Math.log(bytes) / Math.log(1024));
-        let suffixIndx = i < 0 ? 0 : i;
-        return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sufixes[suffixIndx]}`;
-    }
+
+    //console.log(fileUploadStatus);
 
     return <>
         <div className={isOurs.current === true ? 'chat-room_message ours': 'chat-room_message users'}>
@@ -62,7 +67,7 @@ const ChatRoomMessage = ({ message, breaking }) => {
                     <div className={`message__new new ${isOurs.current === true ? 'message__new-ours' : ''}` }>
                         <div className='message__new-file'>
                             <div className='message__new-file_download'>
-                                <Download size={22} onClick={handleDownload} />
+                                <Download className='' size={22} onClick={handleDownload} />
                             </div>
                             <div className='message__new-file_description'>
                                 <div className='message__new-file_description-name'>

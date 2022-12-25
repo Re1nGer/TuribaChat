@@ -1,4 +1,4 @@
-import { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { doc, getDoc } from "firebase/firestore";
 import { db } from "../../firebase";
@@ -18,8 +18,8 @@ const useSignalR = () => {
     const { connection, selectedRoomId, currentUser } = useContext(AuthContext);
 
     const onUserTypingStatusChange = (username) => {
-        setGroupUsers(prevState => ({...prevState, [username]: true}));
-        setTimeout(() => setGroupUsers(prevState => ({...prevState, [username]: false})), 700);
+        setGroupUsers(prevState => ({...prevState, [username]: { isTyping: true, groupId: selectedRoomId } }));
+        setTimeout(() => setGroupUsers(prevState => ({...prevState, [username]: { isTyping: false, groupId: selectedRoomId }})), 700);
     }
 
     const debouncedTyping = useDebounce(onUserTypingStatusChange, 300);
@@ -30,7 +30,7 @@ const useSignalR = () => {
 
         const docs = await getDoc(group);
 
-        setGroupUsers(docs.data().members.reduce((a, v) => ({ ...a, [v]: false }), {}));
+        setGroupUsers(docs.data().members.reduce((a, v) => ({ ...a, [v]: {isTyping: false, groupId: selectedRoomId} }), {}));
     }
 
     useEffect(() => {

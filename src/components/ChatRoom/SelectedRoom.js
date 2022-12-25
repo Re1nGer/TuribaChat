@@ -23,7 +23,7 @@ const SelectedRoom = ({ messages }) => {
 
     const breakingMessageIds = useRef({});
 
-    const { currentUser } = useContext(AuthContext);
+    const { currentUser, selectedRoomId } = useContext(AuthContext);
 
     const { connection, groupUsers } = useSignalR();  
 
@@ -53,7 +53,7 @@ const SelectedRoom = ({ messages }) => {
             })}
             <div ref={ref}></div>
             <div style={{width:'100px'}}>
-                { groupUsers[currentUser.uid] === false && Object.values(groupUsers).some(item => item === true) ? 
+                {groupUsers[currentUser.uid]?.isTyping === false && Object.values(groupUsers).some(({isTyping, groupId}) => isTyping === true && groupId === selectedRoomId ) ? 
                     <div className='message__new loading'><span></span></div> : null
                 }
             </div>
