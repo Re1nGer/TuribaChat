@@ -65,7 +65,7 @@ const ChatRoomMessage = ({ message, breaking }) => {
 
     const storage = getStorage();
 
-    const debouncedSetVisible = useDebounce(setIsVisible, 300);
+    const debouncedSetVisible = useDebounce(setIsVisible, 1000);
 
     const storageRef = ref(storage, `files/${selectedRoomId}/${fileName}`);
 

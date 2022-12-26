@@ -34,15 +34,15 @@ const MessageInput = ({ connection }) => {
     }
 
     const sendForm = async () => {
-        if (inputRef.current.value === '') return
+        if (inputText.trim() === '') return
         //const messageText = inputRef.current.value;
         //inputRef.current.value = '';
         const messageText = inputText; //inputText;
         //inputRef.current.innerHTML = '';
-        setInputText('')
         setSelectedMessage();
         try {
             await sendMessageAndUpdateLastGroupMessage(messageText);
+            setInputText('')
             //if (connection) await connection.send('SendNotification', selectedRoomId);
         } catch (error) {}
     }
@@ -65,7 +65,6 @@ const MessageInput = ({ connection }) => {
     React.useEffect(() => {
         if (emoji) {
             setInputText(prevState => prevState.concat(emoji.emoji));
-            //inputRef.current.innerHTML+=`<img src=${emoji.getImageUrl()}  />`
         }
         setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
     },[emoji])
@@ -105,6 +104,7 @@ const MessageInput = ({ connection }) => {
                         onChange={onInputChange}
                         className='message-input__input'
                         name={'message'}
+                        wrap={'soft'}
                         value={inputText}
                     />
 {/*                      <div contentEditable={true}
