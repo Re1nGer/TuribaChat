@@ -1,9 +1,10 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, useState } from 'react';
 import ChatRoomMessage from '../ChatRoomMessage/ChatRoomMessage';
 import MessageInput from '../MessageInput/MessageInput';
 import useSignalR from '../../hooks/useSignalR';
 import "./ChatRoom.scss";
 import { AuthContext } from '../../context/AuthContext';
+import useChat from '../../hooks/useChat';
 
 // function returns ids of messages that appear last before they superseded by another user
 const selectBreakingMessage = (messages) => {
@@ -17,7 +18,7 @@ const selectBreakingMessage = (messages) => {
     return result;
 }
 
-const SelectedRoom = ({ messages }) => {
+const SelectedRoom = () => {
 
     const ref = useRef();
 
@@ -27,9 +28,12 @@ const SelectedRoom = ({ messages }) => {
 
     const { connection, groupUsers } = useSignalR();  
 
+    const { messages } = useChat();
+
     React.useEffect(() => {
         ref.current?.scrollIntoView({behavior: 'smooth'});
     },[messages, groupUsers])
+
 
     if (messages.length === 0) {
         return <>
@@ -51,13 +55,14 @@ const SelectedRoom = ({ messages }) => {
                     message={message}
                 />
             })}
+
             <div ref={ref}></div>
+
             <div style={{width:'100px'}}>
                 {groupUsers[currentUser.uid]?.isTyping === false && Object.values(groupUsers).some(({isTyping, groupId}) => isTyping === true && groupId === selectedRoomId ) ? 
                     <div className='message__new loading'><span></span></div> : null
                 }
             </div>
-            
         </div>
         <MessageInput connection={connection} />
     </>

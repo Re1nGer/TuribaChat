@@ -1,1 +1,1 @@
-export const appCheck = false;
+export const appCheck = true;

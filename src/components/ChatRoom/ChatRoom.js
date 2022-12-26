@@ -5,7 +5,7 @@ import DefaultRoom from './DefaultRoom';
 import { useParams } from 'react-router-dom';
 import './ChatRoom.scss';
 import SelectedRoom from './SelectedRoom';
-import { onSnapshot, doc, getDoc, limitToLast } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import DefaultRoomImage from './images/avatardefault.png';
 
@@ -14,8 +14,6 @@ const ChatRoom = () => {
     const { selectedRoomId, setSelectedRoomId } = React.useContext(AuthContext);
 
     const [groupMetadata, setGroupMetadata] = React.useState();
-
-    const [messages, setMessages] = React.useState([]);
 
     const { id } = useParams();
 
@@ -34,18 +32,9 @@ const ChatRoom = () => {
 
     React.useEffect(() => {
         if (id) setSelectedRoomId(id);
-        let subcribe = null;
         fetchGroupMetadata();
-
-        if (selectedRoomId) {
-            subcribe = onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
-                setMessages(document.data().messages);
-            }, limitToLast(25));
-        }
-
-        return () => subcribe
         
-    },[id, selectedRoomId])
+    },[id])
 
     return <>
         <div className='room'>
@@ -63,7 +52,7 @@ const ChatRoom = () => {
                     <MenuIcon />
                 </div>
             </header>
-            { selectedRoomId === '' ? <DefaultRoom /> : <SelectedRoom messages={messages} /> }
+            { selectedRoomId === '' ? <DefaultRoom /> : <SelectedRoom /> }
         </div>
     </>
 }
