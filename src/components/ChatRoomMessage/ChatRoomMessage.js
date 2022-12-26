@@ -56,7 +56,6 @@ const ChatRoomMessage = ({ message, breaking }) => {
     const [isVisible, setIsVisible] = useState(false);
 
     const observerCallback = (entries) => {
-        console.log(isVisible);
         const [ entry ] = entries;
         setIsVisible(entry.isIntersecting);
     }
@@ -96,9 +95,9 @@ const ChatRoomMessage = ({ message, breaking }) => {
 
     React.useEffect(() => {
 
-        if (isVisible && !isRead && sentBy !== currentUser.uid) 
+        if (isVisible && isRead === false && sentBy !== currentUser.uid) 
             markAsRead();
-    },[isVisible])
+    },[isVisible, isRead])
 
     return <>
         <div ref={messageRef} className={isOurs.current === true ? 'chat-room_message ours': 'chat-room_message users'}>

@@ -25,15 +25,15 @@ const firebaseConfig = {
 
 export const app = initializeApp(firebaseConfig);
 
-self.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSetting;
+//self.FIREBASE_APPCHECK_DEBUG_TOKEN = appCheckSetting;
 
-const appCheck = initializeAppCheck(app, {
+/* const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaV3Provider('7C62364B-3648-4BA9-8FBE-B19963A75ADC'),
 
   // Optional argument. If true, the SDK automatically refreshes App Check
   // tokens as needed.
   isTokenAutoRefreshEnabled: true
-});
+}); */
 
 
 export const auth = getAuth();
