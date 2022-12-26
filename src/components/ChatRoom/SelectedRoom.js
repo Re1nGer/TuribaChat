@@ -4,6 +4,8 @@ import MessageInput from '../MessageInput/MessageInput';
 import useSignalR from '../../hooks/useSignalR';
 import "./ChatRoom.scss";
 import { AuthContext } from '../../context/AuthContext';
+import { onSnapshot, limitToLast, doc} from 'firebase/firestore';
+import { db } from '../../../firebase';
 import useChat from '../../hooks/useChat';
 
 // function returns ids of messages that appear last before they superseded by another user
@@ -28,11 +30,27 @@ const SelectedRoom = () => {
 
     const { connection, groupUsers } = useSignalR();  
 
-    const { messages } = useChat();
+    const [messages, setMessages] = useState([]);
 
     React.useEffect(() => {
         ref.current?.scrollIntoView({behavior: 'smooth'});
-    },[messages, groupUsers])
+    },[groupUsers])
+
+    React.useEffect(() => {
+
+        let subcribe = null;
+
+        if (selectedRoomId) {
+            subcribe = onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
+                setMessages(document.data().messages);
+            }, limitToLast(25));
+        }
+
+    return () => {
+        subcribe();
+    } 
+
+    },[selectedRoomId]);
 
 
     if (messages.length === 0) {

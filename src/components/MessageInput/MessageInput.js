@@ -30,9 +30,6 @@ const MessageInput = ({ connection }) => {
     const onInputChange = async (e) => {
         setIsInputTextEmpty(e.target.value === '' ? true : false );
         setInputText(e.target.value);
-        //setIsInputTextEmpty(inputRef.current.innerHTML === '' ? true : false );
-        //setInputText([inputRef.current.innerHTML]);
-        //console.log(inputRef.current.innerHTML);
         if (connection) await connection.send('StartTyping', currentUser?.uid);
     }
 
@@ -42,7 +39,7 @@ const MessageInput = ({ connection }) => {
         //inputRef.current.value = '';
         const messageText = inputText; //inputText;
         //inputRef.current.innerHTML = '';
-        setInputText([])
+        setInputText('')
         setSelectedMessage();
         try {
             await sendMessageAndUpdateLastGroupMessage(messageText);

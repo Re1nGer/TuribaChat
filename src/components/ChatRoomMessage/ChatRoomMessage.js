@@ -7,6 +7,7 @@ import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import useChat from '../../hooks/useChat';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
+import useDebounce from '../../hooks/useDebounce';
 
 const getBytes = (bytes) => {
     const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
@@ -18,7 +19,7 @@ const getBytes = (bytes) => {
 const options = {
     root: null,
     rootMargin: "0px",
-    threshold: 1.0
+    threshold: 0
 };
 
 const ChatRoomMessage = ({ message, breaking }) => {
@@ -57,12 +58,14 @@ const ChatRoomMessage = ({ message, breaking }) => {
 
     const observerCallback = (entries) => {
         const [ entry ] = entries;
-        setIsVisible(entry.isIntersecting);
+        debouncedSetVisible(entry.isIntersecting);
     }
 
     //const { fileUploadStatus } = useChat();
 
     const storage = getStorage();
+
+    const debouncedSetVisible = useDebounce(setIsVisible, 300);
 
     const storageRef = ref(storage, `files/${selectedRoomId}/${fileName}`);
 

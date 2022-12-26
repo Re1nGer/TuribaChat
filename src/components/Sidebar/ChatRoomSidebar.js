@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import useSignalR from '../../hooks/useSignalR';
 
@@ -15,8 +16,11 @@ const ChatRoomSidebar = ({
 
     const { selectedRoomId, setSelectedRoomId } = useContext(AuthContext);
 
+    const navigate = useNavigate();
+
     const handleRoomSelect = (id) => {
         setSelectedRoomId(id);
+        navigate('/dashboard/' + id);
     }
 
     React.useEffect(() => {
