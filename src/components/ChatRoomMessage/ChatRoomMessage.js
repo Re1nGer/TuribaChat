@@ -58,16 +58,18 @@ const ChatRoomMessage = ({ message, breaking }) => {
 
     const observerCallback = (entries) => {
         const [ entry ] = entries;
-        debouncedSetVisible(entry.isIntersecting);
+        setIsVisible(entry.isIntersecting);
     }
 
     //const { fileUploadStatus } = useChat();
 
     const storage = getStorage();
 
-    const debouncedSetVisible = useDebounce(setIsVisible, 1000);
+    const debouncedSetVisible = useDebounce(observerCallback, 500);
 
     const storageRef = ref(storage, `files/${selectedRoomId}/${fileName}`);
+
+    const [isReadLocal, setIsReadLocal] = useState(isRead);
 
     const handleDownload = (event) => {
          getDownloadURL(storageRef)
@@ -80,13 +82,14 @@ const ChatRoomMessage = ({ message, breaking }) => {
             if (item.id === id) item.isRead = true;
             return item;
         });
+        setIsReadLocal(true);
         await updateDoc(docRef, {
             messages: copyMessages
         });
     }
 
     React.useEffect(() => {
-        const observer = new IntersectionObserver(observerCallback, options);
+        const observer = new IntersectionObserver(debouncedSetVisible, options);
 
         if (messageRef.current) observer.observe(messageRef.current);
 
@@ -98,9 +101,16 @@ const ChatRoomMessage = ({ message, breaking }) => {
 
     React.useEffect(() => {
 
-        if (isVisible && isRead === false && sentBy !== currentUser.uid) 
+        if (isVisible && isReadLocal === false && sentBy !== currentUser.uid)  {
             markAsRead();
-    },[isVisible, isRead])
+        }
+    },[isVisible, isRead, isReadLocal])
+
+
+    React.useEffect(() => {
+        if (isRead)
+            setIsReadLocal(true);
+    },[isRead])
 
     return <>
         <div ref={messageRef} className={isOurs.current === true ? 'chat-room_message ours': 'chat-room_message users'}>
@@ -112,7 +122,7 @@ const ChatRoomMessage = ({ message, breaking }) => {
                     {messageText}
                     <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
                     <div className='checkmark-sent-delivered'>&#x2713;</div>
-                    { isRead && <div className='checkmark-read'>&#x2713;</div> }
+                    { isReadLocal && <div className='checkmark-read'>&#x2713;</div> }
                 </div> : 
                 <div className={`message__new new ${isOurs.current === true ? 'message__new-ours' : ''}` }>
                     <div className='message__new-file'>
@@ -130,7 +140,7 @@ const ChatRoomMessage = ({ message, breaking }) => {
                     </div>
                     <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
                     <div className='checkmark-sent-delivered'>&#x2713;</div>
-                    <div className='checkmark-read'>&#x2713;</div>
+                    { isRead && <div className='checkmark-read'>&#x2713;</div> }
                 </div> 
             }
             </div>
