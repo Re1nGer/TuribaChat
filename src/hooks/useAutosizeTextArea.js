@@ -13,17 +13,6 @@ const useAutosizeTextArea = (textAreaRef, value) => {
       textAreaRef.style.height = scrollHeight + "px";
     }
   }, [textAreaRef, value]);
-
-  useEffect(() => {
-    if (textAreaRef) {
-        if (value === '') {
-            textAreaRef.style.height = '0px';
-            textAreaRef.style.rows = '0';
-            const scrollHeight = textAreaRef.scrollHeight;
-            textAreaRef.style.height = scrollHeight + "px";
-        }
-    }
-  }, [value]);
 };
 
 export default useAutosizeTextArea;

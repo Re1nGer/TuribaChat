@@ -6,7 +6,6 @@ import "./ChatRoom.scss";
 import { AuthContext } from '../../context/AuthContext';
 import { onSnapshot, limitToLast, doc} from 'firebase/firestore';
 import { db } from '../../../firebase';
-import useChat from '../../hooks/useChat';
 
 // function returns ids of messages that appear last before they superseded by another user
 const selectBreakingMessage = (messages) => {
@@ -34,7 +33,7 @@ const SelectedRoom = () => {
 
     React.useEffect(() => {
         ref.current?.scrollIntoView({behavior: 'smooth'});
-    },[groupUsers])
+    },[])
 
     React.useEffect(() => {
 
@@ -73,9 +72,7 @@ const SelectedRoom = () => {
                     message={message}
                 />
             })}
-
             <div ref={ref}></div>
-
             <div style={{width:'100px'}}>
                 {groupUsers[currentUser.uid]?.isTyping === false && Object.values(groupUsers).some(({isTyping, groupId}) => isTyping === true && groupId === selectedRoomId ) ? 
                     <div className='message__new loading'><span></span></div> : null
