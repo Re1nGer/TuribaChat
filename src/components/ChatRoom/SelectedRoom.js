@@ -79,7 +79,7 @@ const SelectedRoom = () => {
                 }
             </div>
         </div>
-        <MessageInput connection={connection} />
+        <MessageInput connection={connection} ref={ref} />
     </>
 }
 

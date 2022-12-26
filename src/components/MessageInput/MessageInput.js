@@ -1,4 +1,4 @@
-import React, { useContext, useRef } from 'react';
+import React, { useContext, useRef, forwardRef } from 'react';
 import { Smile, Paperclip, Send, X } from 'react-feather';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
@@ -7,7 +7,7 @@ import { Emoji } from 'emoji-picker-react';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
 
-const MessageInput = ({ connection }) => {
+const MessageInput = ({ connection }, ref) => {
 
     const { sendMessageAndUpdateLastGroupMessage, uploadFile } = useChat();
 
@@ -43,6 +43,7 @@ const MessageInput = ({ connection }) => {
         try {
             await sendMessageAndUpdateLastGroupMessage(messageText);
             setInputText('')
+            ref.current?.scrollIntoView({behavior: 'smooth'});
             //if (connection) await connection.send('SendNotification', selectedRoomId);
         } catch (error) {}
     }
@@ -140,4 +141,4 @@ const FileInput = ({ onChange }) => {
 }
 
 
-export default MessageInput;
+export default forwardRef(MessageInput);
