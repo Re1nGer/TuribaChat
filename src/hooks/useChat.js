@@ -1,6 +1,6 @@
-import { useContext, useState } from 'react';
-import { updateDoc, doc, arrayUnion, deleteDoc, arrayRemove, getDoc } from 'firebase/firestore';
-import { uploadBytes, getStorage, ref, uploadBytesResumable } from 'firebase/storage';
+import React, { useContext, useState } from 'react';
+import { updateDoc, doc, arrayUnion, arrayRemove, getDoc, onSnapshot, limitToLast } from 'firebase/firestore';
+import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { db } from '../../firebase';
 import { AuthContext } from '../context/AuthContext';
 import {v4 as uuidv4} from 'uuid';
@@ -11,6 +11,8 @@ const useChat = () => {
     const { selectedRoomId, currentUser, selectedMessage } = useContext(AuthContext);
 
     const [fileUploadStatus, setFileUploadStatus] = useState('');
+
+    const [messages, setMessages] = useState([]);
 
     const sendMessageAndUpdateLastGroupMessage = async (inputMessage) => {
 
@@ -27,7 +29,13 @@ const useChat = () => {
             id: uuidv4()
         };
 
-        await updateDoc(doc(db, 'messages', selectedRoomId), {
+        //const docRef = dbRef(db, 'messages', selectedRoomId);
+
+        //const pushMessage = push(docRef);
+
+        //await set(pushMessage, message);
+
+         await updateDoc(doc(db, 'messages', selectedRoomId), {
             messages: arrayUnion(message) 
         });
 
@@ -97,9 +105,23 @@ const useChat = () => {
 
                 await updateDoc(doc(db, 'chatRooms', selectedRoomId), { recentMessage: { message: recentMessage.message } });
             });
-    }
+        }
+    
+        React.useEffect(() => {
 
-    return { sendMessageAndUpdateLastGroupMessage, uploadFile, fileUploadStatus };
+        let subcribe = null;
+
+        if (selectedRoomId) {
+            subcribe = onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
+                setMessages(document.data().messages);
+            }, limitToLast(25));
+        }
+
+        return () => subcribe
+
+        },[selectedRoomId]);
+
+    return { sendMessageAndUpdateLastGroupMessage, uploadFile, fileUploadStatus, messages };
 }
 
 
