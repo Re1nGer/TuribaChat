@@ -15,13 +15,14 @@ const ChatRoom = () => {
 
     const [groupMetadata, setGroupMetadata] = React.useState();
 
-    const { id } = useParams();
+    const { groupId } = useParams();
 
     const fetchGroupMetadata = async () => {
         try {
-            const chatGroupQuery = doc(db, 'chatRooms', id);
+            const chatGroupQuery = doc(db, 'chatRooms', groupId);
 
             const roomSnap = await getDoc(chatGroupQuery);
+
 
             setGroupMetadata(roomSnap.data());
 
@@ -31,12 +32,12 @@ const ChatRoom = () => {
     }
 
     React.useEffect(() => {
-        if (id)  {
-            setSelectedRoomId(id);
-            fetchGroupMetadata();
+        if (groupId)  {
+            setSelectedRoomId(groupId);
+            //fetchGroupMetadata();
         }
         
-    },[id])
+    },[groupId])
 
     return <>
         <div className='room'>

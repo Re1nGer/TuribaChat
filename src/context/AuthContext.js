@@ -23,17 +23,24 @@ export const AuthContextProvider = ({children}) => {
     const [emoji, setEmoji] = React.useState();
 
     React.useEffect(() => {
+
+        if (!auth.currentUser)
+            setCurrentUser(auth.currentUser);
+
+    },[auth.currentUser?.uid])
+
+    React.useEffect(() => {
         const unsubsribe = onAuthStateChanged(auth, user => {
             setCurrentUser(user);
             setIsLoggedIn(user ? true : false);
         });
-        return () => unsubsribe;
+        return () => unsubsribe();
     },[])
 
     React.useEffect(() => {
         if (!connection) {
             const connect = new signalR.HubConnectionBuilder()
-                .withUrl('https://chatapi20221224182023.azurewebsites.net/Chat')
+                .withUrl('http://localhost:5259/Chat')
                 .withAutomaticReconnect()
                 .build();
         

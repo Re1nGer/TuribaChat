@@ -3,7 +3,6 @@ import { Smile, Paperclip, Send, X } from 'react-feather';
 import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
 import { AuthContext } from '../../context/AuthContext';
-import { Emoji } from 'emoji-picker-react';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
 
 
@@ -28,21 +27,26 @@ const MessageInput = ({ connection }, ref) => {
     const inputRef = useRef();
 
     const onInputChange = async (e) => {
+/*         if (e.target.value.trim() === '')  {
+            return;
+        }
         setIsInputTextEmpty(e.target.value === '' ? true : false );
-        setInputText(e.target.value);
-        if (connection) await connection.send('StartTyping', currentUser?.uid);
+        setInputText(e.target.value); */
+        if (connection) await connection.send('StartTyping', currentUser?.uid, selectedRoomId);
     }
 
     const sendForm = async () => {
-        if (inputText.trim() === '') return
+        if (inputRef.current.value.trim() === '') return
         //const messageText = inputRef.current.value;
         //inputRef.current.value = '';
-        const messageText = inputText; //inputText;
+        const messageText = inputRef.current.value; //inputText;
         //inputRef.current.innerHTML = '';
-        setSelectedMessage();
+        //setSelectedMessage();
+        inputRef.current.value = "";
         try {
             await sendMessageAndUpdateLastGroupMessage(messageText);
-            setInputText('')
+            inputRef.current.value = "";
+            //setInputText('')
             ref.current?.scrollIntoView({behavior: 'smooth'});
             //if (connection) await connection.send('SendNotification', selectedRoomId);
         } catch (error) {}
@@ -65,7 +69,8 @@ const MessageInput = ({ connection }, ref) => {
 
     React.useEffect(() => {
         if (emoji) {
-            setInputText(prevState => prevState.concat(emoji.emoji));
+            inputRef.current.value+=emoji.emoji;
+            //setInputText(prevState => prevState.concat(emoji.emoji));
         }
         setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
     },[emoji])
@@ -106,7 +111,6 @@ const MessageInput = ({ connection }, ref) => {
                         className='message-input__input'
                         name={'message'}
                         wrap={'soft'}
-                        value={inputText}
                     />
 {/*                      <div contentEditable={true}
                         //onKeyDown={onEnterPress}

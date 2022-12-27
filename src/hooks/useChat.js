@@ -1,5 +1,5 @@
-import React, { useContext, useState } from 'react';
-import { updateDoc, doc, arrayUnion, arrayRemove, getDoc, onSnapshot, limitToLast } from 'firebase/firestore';
+import { useContext, useState } from 'react';
+import { updateDoc, doc, arrayUnion, arrayRemove, getDoc } from 'firebase/firestore';
 import { getStorage, ref, uploadBytesResumable } from 'firebase/storage';
 import { db } from '../../firebase';
 import { AuthContext } from '../context/AuthContext';
@@ -11,8 +11,6 @@ const useChat = () => {
     const { selectedRoomId, currentUser, selectedMessage } = useContext(AuthContext);
 
     const [fileUploadStatus, setFileUploadStatus] = useState('');
-
-    const [messages, setMessages] = useState([]);
 
     const sendMessageAndUpdateLastGroupMessage = async (inputMessage) => {
 
@@ -28,12 +26,6 @@ const useChat = () => {
             replyTo: selectedMessage !== undefined ? { messageText, sentByName } : null,
             id: uuidv4()
         };
-
-        //const docRef = dbRef(db, 'messages', selectedRoomId);
-
-        //const pushMessage = push(docRef);
-
-        //await set(pushMessage, message);
 
          await updateDoc(doc(db, 'messages', selectedRoomId), {
             messages: arrayUnion(message) 
@@ -107,21 +99,8 @@ const useChat = () => {
             });
         }
     
-        React.useEffect(() => {
 
-        let subcribe = null;
-
-        if (selectedRoomId) {
-            subcribe = onSnapshot(doc(db, "messages", selectedRoomId), (document) => {
-                setMessages(document.data().messages);
-            }, limitToLast(25));
-        }
-
-        return () => subcribe
-
-        },[selectedRoomId]);
-
-    return { sendMessageAndUpdateLastGroupMessage, uploadFile, fileUploadStatus, messages };
+    return { sendMessageAndUpdateLastGroupMessage, uploadFile, fileUploadStatus };
 }
 
 

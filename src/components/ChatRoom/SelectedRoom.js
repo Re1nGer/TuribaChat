@@ -6,6 +6,8 @@ import "./ChatRoom.scss";
 import { AuthContext } from '../../context/AuthContext';
 import { onSnapshot, limitToLast, doc} from 'firebase/firestore';
 import { db } from '../../../firebase';
+import useDebounce from '../../hooks/useDebounce';
+import { useParams } from 'react-router-dom';
 
 // function returns ids of messages that appear last before they superseded by another user
 const selectBreakingMessage = (messages) => {
@@ -25,11 +27,20 @@ const SelectedRoom = () => {
 
     const breakingMessageIds = useRef({});
 
+    const { groupId } = useParams();
+
     const { currentUser, selectedRoomId } = useContext(AuthContext);
 
-    const { connection, groupUsers } = useSignalR();  
+    const { connection, isUserTyping, setIsUserTyping } = useSignalR();  
 
     const [messages, setMessages] = useState([]);
+
+    //const [isTyping, setIsTyping] = useState(false);
+
+    const handleTypingStatus = () => {
+        setIsUserTyping(true);
+        setTimeout(() => setIsUserTyping(false), 5000);
+    }
 
     React.useEffect(() => {
         ref.current?.scrollIntoView({behavior: 'smooth'});
@@ -51,6 +62,23 @@ const SelectedRoom = () => {
 
     },[selectedRoomId]);
 
+    const debouncedTyping = useDebounce(handleTypingStatus, 300);
+
+    React.useEffect(() => {
+
+        if (connection) {
+            connection.send("AddToGroup", selectedRoomId);
+            connection.on("ReceiveTypingStatus", (userId, groupId) => {
+                if (userId !== currentUser.uid && groupId === groupId)
+                    debouncedTyping();
+            });
+        } 
+    
+
+        return () =>  { 
+            connection.send("RemoveFromGroup", groupId); 
+        }
+    },[selectedRoomId])
 
     if (messages.length === 0) {
         return <>
@@ -68,15 +96,16 @@ const SelectedRoom = () => {
         <div className='room__messages'>
             {messages.map((message, id) => {
                return <ChatRoomMessage key={id}
+                    messages={messages}
                     breaking={message.id in breakingMessageIds.current}
                     message={message}
                 />
             })}
             <div ref={ref}></div>
             <div style={{width:'100px'}}>
-                {groupUsers[currentUser.uid]?.isTyping === false && Object.values(groupUsers).some(({isTyping, groupId}) => isTyping === true && groupId === selectedRoomId ) ? 
-                    <div className='message__new loading'><span></span></div> : null
-                }
+                <div className={`message__new loading ${!isUserTyping ? 'loading--hide' : '' }`}>
+                    { isUserTyping ? <span></span> : null }
+                </div>
             </div>
         </div>
         <MessageInput connection={connection} ref={ref} />

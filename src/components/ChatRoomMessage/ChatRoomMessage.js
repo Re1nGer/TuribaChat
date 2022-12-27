@@ -22,7 +22,7 @@ const options = {
     threshold: 0
 };
 
-const ChatRoomMessage = ({ message, breaking }) => {
+const ChatRoomMessage = ({ message, breaking, messages }) => {
 
     //const [isOurs, setIsOurs] = React.useState(false);
 
@@ -31,8 +31,6 @@ const ChatRoomMessage = ({ message, breaking }) => {
     //ref is used not to make any additional renders while comparing
     //ordinary let variable could be used instead
     const isOurs = useRef(false);
-
-    const { messages } = useChat();
 
     const messageRef = useRef();
 
