@@ -40,7 +40,7 @@ export const AuthContextProvider = ({children}) => {
     React.useEffect(() => {
         if (!connection) {
             const connect = new signalR.HubConnectionBuilder()
-                .withUrl('http://localhost:5259/Chat')
+                .withUrl('https://chatapi20221224182023.azurewebsites.net/Chat')
                 .withAutomaticReconnect()
                 .build();
         
