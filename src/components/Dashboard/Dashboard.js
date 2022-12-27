@@ -16,7 +16,7 @@ const Dashboard = ({ groupId }) => {
     const fetchGroups = () => {
         if (currentUser?.uid) {
             const querySnapshot = query(collection(db, 'chatRooms'), where('members', 'array-contains', currentUser.uid));
-            onSnapshot(querySnapshot, (snap) => {
+            return onSnapshot(querySnapshot, (snap) => {
 
                 const { docs } = snap;
 
@@ -36,6 +36,8 @@ const Dashboard = ({ groupId }) => {
     React.useEffect(() => {
         if (groupId) setGroup();
         fetchGroups();
+
+        return () => fetchGroups();
     },[currentUser?.uid, groupId])
 
     return <>

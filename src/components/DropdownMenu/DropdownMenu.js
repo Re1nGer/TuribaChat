@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { MoreVertical } from "react-feather";
 import { auth } from '../../../firebase';
+import { AuthContext } from '../../context/AuthContext';
 import AddGroupModal from '../Sidebar/AddGroupModal';
 import "./DropdownMenu.scss";
 
@@ -9,6 +10,8 @@ const DropdownMenu = ({ setIsOpen }) => {
     const [isDropdownOpen, setIsDropdownOpen] = React.useState(false);
 
     const [isAddGroupModalOpen, setIsAddGroupModalOpen] = React.useState(false);
+
+    const { setSelectedRoomId } = useContext(AuthContext);
 
     const handleLogout = () => {
         try {
@@ -25,6 +28,10 @@ const DropdownMenu = ({ setIsOpen }) => {
     const handleAddGroupModalClick = () => {
         setIsAddGroupModalOpen(true);
     }
+
+    React.useEffect(() => {
+        return () => setSelectedRoomId('');
+    },[])
 
     return ( <>
         <div className={isDropdownOpen ? `dropdown dropdown--open` : 'dropdown'} onClick={handleDropdownClick}>

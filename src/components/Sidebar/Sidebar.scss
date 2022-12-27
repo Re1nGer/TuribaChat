@@ -1,10 +1,18 @@
 .sidebar {
+    display: flex;
+    flex-direction: column;
     flex: 1;
     height: 100%;
     padding: .5rem;
     background-color: #f0f2f5;
     border-right: 1px solid black;
     max-width: 400px;
+
+    &__groups {
+        overflow-y: auto;
+        height: 100%;
+        width: 100%;
+    }
 
     &__menu {
         cursor: pointer;

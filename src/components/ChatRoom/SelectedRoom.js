@@ -66,8 +66,8 @@ const SelectedRoom = () => {
 
     React.useEffect(() => {
 
-        if (connection) {
-            connection.send("AddToGroup", selectedRoomId);
+        if (connection && connection.state !== "Disconnected") {
+            connection.invoke("AddToGroup", selectedRoomId);
             connection.on("ReceiveTypingStatus", (userId, groupId) => {
                 if (userId !== currentUser.uid && groupId === groupId)
                     debouncedTyping();
@@ -76,9 +76,10 @@ const SelectedRoom = () => {
     
 
         return () =>  { 
-            connection.send("RemoveFromGroup", groupId); 
+            if (connection?.state !== "Disconnecting")
+                connection?.send("RemoveFromGroup", groupId); 
         }
-    },[selectedRoomId])
+    },[selectedRoomId, connection])
 
     if (messages.length === 0) {
         return <>

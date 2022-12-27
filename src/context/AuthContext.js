@@ -34,6 +34,7 @@ export const AuthContextProvider = ({children}) => {
             setCurrentUser(user);
             setIsLoggedIn(user ? true : false);
         });
+
         return () => unsubsribe();
     },[])
 
@@ -43,7 +44,9 @@ export const AuthContextProvider = ({children}) => {
                 .withUrl('https://chatapi20221224182023.azurewebsites.net/Chat')
                 .withAutomaticReconnect()
                 .build();
-        
+
+            connect.start();
+
             setConnection(connect);
         }
     },[])
@@ -59,7 +62,7 @@ export const AuthContextProvider = ({children}) => {
         setIsEmojiTabOpen,
         isEmojiTabOpen,
         setEmoji,
-        emoji
+        emoji,
     };
 
     return (<AuthContext.Provider value={value}>
