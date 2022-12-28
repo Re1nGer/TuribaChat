@@ -213,9 +213,19 @@
       }
     }
 
-    &-by {
+    .ours &-by {
         position: absolute;
         top: 0;
+        right: 1%;
+        min-width: 100px;
+        font-size: 14px;
+        color: #555;
+        text-align: right;
+    }
+    .users &-by {
+        position: absolute;
+        top: 0;
+        left: 1%;
         min-width: 100px;
         font-size: 14px;
         color: #555;

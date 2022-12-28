@@ -34,7 +34,7 @@ const ChatRoom = () => {
     React.useEffect(() => {
         if (groupId)  {
             setSelectedRoomId(groupId);
-            //fetchGroupMetadata();
+            fetchGroupMetadata();
         }
         
     },[groupId])
@@ -44,7 +44,7 @@ const ChatRoom = () => {
             <header className='room__header'>
                 <div className='room__metadata'>
                     <div className='room__metadata-picture'>
-                        <img src={DefaultRoomImage} alt='room picture' />
+                        <img src={DefaultRoomImage} alt='room' />
                     </div>
                     <div className='room__metadata-name'>
                         { groupMetadata?.name }

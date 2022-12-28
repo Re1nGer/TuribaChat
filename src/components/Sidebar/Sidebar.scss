@@ -83,6 +83,15 @@
         }
     }
 
+    &__group {
+        &-last_message {
+            overflow: hidden;
+            white-space: nowrap; /* Don't forget this one */
+            text-overflow: ellipsis;
+            width: 200px;
+        }
+    }
+
     &__groups {
         display: flex;
         flex-direction: column;

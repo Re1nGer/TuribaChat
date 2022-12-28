@@ -4,7 +4,6 @@ import { AuthContext } from '../../context/AuthContext';
 import dayjs from 'dayjs';
 import { Download } from 'react-feather';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import useChat from '../../hooks/useChat';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import useDebounce from '../../hooks/useDebounce';
@@ -37,7 +36,6 @@ const ChatRoomMessage = ({ message, breaking, messages }) => {
     const {
         sentByName,
         messageText,
-        replyTo,
         sentAt,
         sentBy,
         fileName,
@@ -58,8 +56,6 @@ const ChatRoomMessage = ({ message, breaking, messages }) => {
         const [ entry ] = entries;
         setIsVisible(entry.isIntersecting);
     }
-
-    //const { fileUploadStatus } = useChat();
 
     const storage = getStorage();
 
