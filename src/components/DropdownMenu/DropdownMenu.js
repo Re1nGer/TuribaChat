@@ -1,5 +1,6 @@
 import React, { useContext } from 'react';
 import { MoreVertical } from "react-feather";
+import { useNavigate } from 'react-router-dom';
 import { auth } from '../../../firebase';
 import { AuthContext } from '../../context/AuthContext';
 import AddGroupModal from '../Sidebar/AddGroupModal';
@@ -13,9 +14,14 @@ const DropdownMenu = ({ setIsOpen }) => {
 
     const { setSelectedRoomId } = useContext(AuthContext);
 
-    const handleLogout = () => {
+    const navigate = useNavigate();
+
+    const handleLogout = async () => {
         try {
-            auth.signOut();
+            setSelectedRoomId('');
+            await auth.signOut();
+            sessionStorage.clear();
+            navigate('/');
         } catch (error) {
             console.log(error);
         }

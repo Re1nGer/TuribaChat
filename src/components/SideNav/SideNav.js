@@ -8,9 +8,10 @@ const SideNav = ({ isOpen, setIsOpen }) => {
 
     const { currentUser } = useContext(AuthContext);
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
         try {
-            auth.signOut();
+            sessionStorage.clear();
+            await auth.signOut();
         } catch (error) {
             console.log(error)
         }
@@ -20,7 +21,7 @@ const SideNav = ({ isOpen, setIsOpen }) => {
         <div className={`sidenav__container ${isOpen ? "sidenav__container--open": ''}`}>
             <div className='sidenav__header'>
                 <span className='sidenav__header-btn-close'><ArrowLeft color='#fff' onClick={() => setIsOpen(false)} /></span>
-                <button className='sidenav__header-btn-logout' onClick={() => auth.signOut()}>
+                <button className='sidenav__header-btn-logout' onClick={handleLogout}>
                     <LogOut size={15} />
                     Logout
                 </button>
@@ -28,9 +29,9 @@ const SideNav = ({ isOpen, setIsOpen }) => {
             <ul className='sidenav__content'>
                 <li className='sidenav__content-item'>
                     <div className='sidenav__user-info'>
-                        <img className='sidenav__user-image' src={currentUser.photoURL} alt='user photo'/>
+                        <img className='sidenav__user-image' src={currentUser?.photoURL} alt='user photo'/>
                         <div className='sidenav__user-data'>
-                            <div className='sidenav__user-name'>{currentUser.displayName}</div>
+                            <div className='sidenav__user-name'>{currentUser?.displayName}</div>
                             <div className='sidenav__user-bio'>...</div>
                         </div>
                     </div>

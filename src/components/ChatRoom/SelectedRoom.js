@@ -66,7 +66,7 @@ const SelectedRoom = () => {
 
     React.useEffect(() => {
 
-        if (connection && connection.state !== "Disconnected") {
+        if (connection && connection.state !== "Disconnected" && connection.state === "Connected") {
             connection.invoke("AddToGroup", selectedRoomId);
             connection.on("ReceiveTypingStatus", (userId, groupId) => {
                 if (userId !== currentUser.uid && groupId === groupId)

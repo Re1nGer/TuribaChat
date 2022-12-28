@@ -15,7 +15,7 @@ const useSignalR = () => {
     const { connection } = useContext(AuthContext);
 
     useEffect(() => {
-        if (connection) {
+        if (connection && connection.state === "Disconnected") {
             connection.start()
             .catch(error => console.log(error));
         }

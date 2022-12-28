@@ -7,7 +7,7 @@ import DropdownMenu from '../DropdownMenu/DropdownMenu';
 import DefaultAvatarImage from './assets/avatardefault.png';
 
 
-const Sidebar = ({groups}) => {
+const Sidebar = ({ groups }) => {
 
     const [sidenavOpen, setSidenavOpen] = React.useState(false);
 
@@ -20,9 +20,9 @@ const Sidebar = ({groups}) => {
         <div className='sidebar'>
             <div className='sidebar__user-data'>
                 <span className='sidebar__user-image'>
-                    <img src={currentUser.photoURL} alt='user_img' />
+                    <img src={currentUser?.photoURL} alt='user_img' />
                 </span>
-                <span className='sidebar_user-name'> { currentUser.displayName } </span>
+                <span className='sidebar_user-name'> { currentUser?.displayName } </span>
                <span className='sidebar__menu'>
                     <DropdownMenu setIsOpen={() => setSidenavOpen(prevState => !prevState)} />
                 </span> 

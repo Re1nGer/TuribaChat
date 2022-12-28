@@ -138,7 +138,7 @@ const ChatRoomMessage = ({ message, breaking, messages }) => {
                     </div>
                     <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
                     <div className='checkmark-sent-delivered'>&#x2713;</div>
-                    { isRead && <div className='checkmark-read'>&#x2713;</div> }
+                    { isReadLocal && <div className='checkmark-read'>&#x2713;</div> }
                 </div> 
             }
             </div>

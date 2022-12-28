@@ -17,6 +17,7 @@ const SignInModal = () => {
 
             await signInWithGoogle();
 
+            sessionStorage.setItem('isSignedIn', true);
             if (state)
                 navigate(state.from, { replace:true });
             else 

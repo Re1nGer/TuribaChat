@@ -27,11 +27,6 @@ const MessageInput = ({ connection }, ref) => {
     const inputRef = useRef();
 
     const onInputChange = async (e) => {
-/*         if (e.target.value.trim() === '')  {
-            return;
-        }
-        setIsInputTextEmpty(e.target.value === '' ? true : false );
-        setInputText(e.target.value); */
         if (connection) await connection.send('StartTyping', currentUser?.uid, selectedRoomId);
     }
 
@@ -68,10 +63,8 @@ const MessageInput = ({ connection }, ref) => {
     }
 
     React.useEffect(() => {
-        if (emoji) {
-            inputRef.current.value+=emoji.emoji;
-            //setInputText(prevState => prevState.concat(emoji.emoji));
-        }
+        if (emoji) inputRef.current.value+=emoji.emoji;
+       
         setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
     },[emoji])
 
@@ -112,15 +105,7 @@ const MessageInput = ({ connection }, ref) => {
                         name={'message'}
                         wrap={'soft'}
                     />
-{/*                      <div contentEditable={true}
-                        //onKeyDown={onEnterPress}
-                        ref={inputRef}
-                        onInput={onInputChange}
-                        //onChange={onInputChange}
-                        className='message-input__input'
-                    >{inputText.map(item => item?.unified ? <Emoji size={16} unified={item.unified} /> : item)}
-                    </div> */}
-                    </div>
+                </div>
                 <div className='message-input__send'>
                     <button type='submit' disabled={isInputTextEmpty} className='message-input__send-button'>
                         <Send />
