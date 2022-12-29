@@ -9,10 +9,19 @@ import { db } from '../../../firebase';
 import useDebounce from '../../hooks/useDebounce';
 
 const getBytes = (bytes) => {
-    const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
-    const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    let suffixIndx = i < 0 ? 0 : i;
-    return `${(bytes / Math.pow(1024, i)).toFixed(2)} ${sufixes[suffixIndx]}`;
+    //const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
+    //const i = Math.abs(Math.floor(Math.log(bytes) / Math.log(1024)));
+    const fSExt = ['Bytes', 'KB', 'MB', 'GB'];
+    let copy = bytes;
+    let i = 0;
+    //check if file is in GB,MB,KB or Bytes
+    while(copy > 900)
+    { 
+        copy/=1024; //divide file size 
+        i++;
+    }
+    //get exact size
+    return (Math.round(copy*100)/100)+' '+fSExt[i];
 }
 
 const options = {

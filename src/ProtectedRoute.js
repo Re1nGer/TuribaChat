@@ -8,7 +8,7 @@ const ProtectedRoute = ({ children }) => {
 
     const location = useLocation();
 
-    if (isSignedIn === false || isSignedIn === undefined) 
+    if (isSignedIn === false || isSignedIn === undefined || !isSignedIn) 
         return <Navigate to={'/login'}  replace={true} state={{from: location.pathname }} />
 
     return children ? children : <Outlet />

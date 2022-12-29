@@ -4,7 +4,7 @@ import MessageInput from '../MessageInput/MessageInput';
 import useSignalR from '../../hooks/useSignalR';
 import "./ChatRoom.scss";
 import { AuthContext } from '../../context/AuthContext';
-import { onSnapshot, limitToLast, doc} from 'firebase/firestore';
+import { onSnapshot, limitToLast, doc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import useDebounce from '../../hooks/useDebounce';
 import { useParams } from 'react-router-dom';
@@ -34,8 +34,6 @@ const SelectedRoom = () => {
     const { connection, isUserTyping, setIsUserTyping } = useSignalR();  
 
     const [messages, setMessages] = useState([]);
-
-    //const [isTyping, setIsTyping] = useState(false);
 
     const handleTypingStatus = () => {
         setIsUserTyping(true);
@@ -73,7 +71,6 @@ const SelectedRoom = () => {
                     debouncedTyping();
             });
         } 
-    
 
         return () =>  { 
             if (connection?.state !== "Disconnecting")

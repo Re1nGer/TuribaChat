@@ -21,6 +21,9 @@
     &__metadata {
         display: flex;
         align-items: center;
+        &:hover {
+          cursor: pointer;
+        }
         &-typing { 
             transition: all .2s linear;
             font-size: 12px;

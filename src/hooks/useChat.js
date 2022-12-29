@@ -71,7 +71,7 @@ const useChat = () => {
             sentBy: currentUser.uid,
             contentType: file.type,
             replyTo: selectedMessage !== undefined ? { messageText, sentByName } : null,
-            size: file.size / (1024 ** 2)
+            size: file.size
         };
 
         await updateDoc(doc(db, 'messages', selectedRoomId), {
