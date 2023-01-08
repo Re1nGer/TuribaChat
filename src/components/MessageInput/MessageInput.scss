@@ -44,6 +44,7 @@
 
     &__input {
         border: 1px solid #fff;
+        background: #fff;
         border-radius: 5px;
         padding: .5rem;
         outline: none;
@@ -54,7 +55,21 @@
         display: flex;
         align-items: center;
         width: 100%;
+        max-width: 1000px;
+        max-height: 75px;
+        word-wrap: break-word;
+        word-break: break-all;
+        overflow-x: hidden;
+        overflow-y: auto;
         resize: none;
+        &[contentEditable=true]:empty:before {
+            content: attr(placeholder);
+            opacity: 0.6;
+        }
+
+        &[contentEditable=true] {
+            max-width: 1000px;
+        }
     }
 
     &__send-button {

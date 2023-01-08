@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { auth } from "../../firebase";
 import { onAuthStateChanged } from "firebase/auth";
 import * as signalR from "@microsoft/signalr";
+import useDebounce from "../hooks/useDebounce";
 
 
 export const AuthContext = React.createContext();
@@ -20,7 +21,11 @@ export const AuthContextProvider = ({children}) => {
 
     const [isEmojiTabOpen, setIsEmojiTabOpen] = React.useState(false);
 
-    const [emoji, setEmoji] = React.useState();
+    const [text, setText] = useState('');
+
+    const debouncedSetText = useDebounce(setText, 100);
+
+    const inputRef = useRef('');
 
     React.useEffect(() => {
 
@@ -61,8 +66,10 @@ export const AuthContextProvider = ({children}) => {
         connection,
         setIsEmojiTabOpen,
         isEmojiTabOpen,
-        setEmoji,
-        emoji,
+        inputRef,
+        text, 
+        debouncedSetText,
+        setText
     };
 
     return (<AuthContext.Provider value={value}>

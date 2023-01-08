@@ -7,6 +7,7 @@ import { getStorage, ref, getDownloadURL } from 'firebase/storage';
 import { doc, updateDoc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import useDebounce from '../../hooks/useDebounce';
+import parse from 'html-react-parser';
 
 const getBytes = (bytes) => {
     //const sufixes = ['B', 'kB', 'MB', 'GB', 'TB'];
@@ -122,7 +123,7 @@ const ChatRoomMessage = ({ message, breaking, messages }) => {
             {
                 message?.type === 'text' ? 
                 <div className={`message__new new ${isOurs.current === true ? 'message__new-ours' : ''}` }>
-                    {messageText}
+                    { parse(messageText || "") }
                     <div className='timestamp'>{dayjs(sentAt.toDate()).format("HH:MM")}</div>
                     <div className='checkmark-sent-delivered'>&#x2713;</div>
                     { isReadLocal && <div className='checkmark-read'>&#x2713;</div> }
@@ -130,7 +131,7 @@ const ChatRoomMessage = ({ message, breaking, messages }) => {
                 <div className={`message__new new ${isOurs.current === true ? 'message__new-ours' : ''}` }>
                     <div className='message__new-file'>
                         <div className='message__new-file_download'>
-                            <Download className='' size={22} onClick={handleDownload} />
+                            <Download size={22} onClick={handleDownload} />
                         </div>
                         <div className='message__new-file_description'>
                             <div className='message__new-file_description-name'>

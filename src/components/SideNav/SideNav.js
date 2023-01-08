@@ -3,6 +3,8 @@ import "./SideNav.scss";
 import { auth } from '../../../firebase';
 import { ArrowLeft, Bell, Lock, LogOut, Settings } from 'react-feather';
 import { AuthContext } from '../../context/AuthContext';
+import "./Switch.scss";
+import Switch from './Switch';
 
 const SideNav = ({ isOpen, setIsOpen }) => {
 
@@ -36,6 +38,10 @@ const SideNav = ({ isOpen, setIsOpen }) => {
                         </div>
                     </div>
                 </li>
+{/*                 <li className='sidenav__content-item sidenav__content-item--switch'>
+                    <Switch />
+                    <div className='sidenav__content-text'>Delete Group After Logout</div>
+                </li> */}
                 <li className='sidenav__content-item'>
                     <div className='sidenav__content-option'>
                         <div><Bell /></div>
@@ -61,3 +67,5 @@ const SideNav = ({ isOpen, setIsOpen }) => {
 
 
 export default SideNav;
+
+

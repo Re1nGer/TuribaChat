@@ -56,6 +56,7 @@
     padding: 1rem;
     background-color: #fff;
     display: flex;
+    flex-wrap: wrap;
     position: relative;
     justify-content: space-between;
     overflow: hidden;
@@ -89,6 +90,8 @@
             white-space: nowrap; /* Don't forget this one */
             text-overflow: ellipsis;
             width: 200px;
+            display: flex;
+            align-items: center;
         }
     }
 

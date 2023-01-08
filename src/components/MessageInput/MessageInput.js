@@ -4,6 +4,7 @@ import './MessageInput.scss';
 import useChat from '../../hooks/useChat';
 import { AuthContext } from '../../context/AuthContext';
 import useAutosizeTextArea from '../../hooks/useAutosizeTextArea';
+import ContentEditable from 'react-contenteditable';
 
 
 const MessageInput = ({ connection }, ref) => {
@@ -15,35 +16,30 @@ const MessageInput = ({ connection }, ref) => {
         setSelectedMessage,
         setIsEmojiTabOpen,
         isEmojiTabOpen,
-        emoji,
         currentUser,
-        selectedRoomId
+        selectedRoomId,
+        debouncedSetText,
+        text,
      } = useContext(AuthContext);
 
     const [isInputTextEmpty, setIsInputTextEmpty] = React.useState(true);
 
-    const [inputText, setInputText] = React.useState('');
-
-    const inputRef = useRef();
+    const inputRefText = useRef();
 
     const onInputChange = async (e) => {
+        debouncedSetText(e.target.value);
         if (connection) await connection.send('StartTyping', currentUser?.uid, selectedRoomId);
+        //inputRefText.current.focus();
     }
 
     const sendForm = async () => {
-        if (inputRef.current.value.trim() === '') return
-        //const messageText = inputRef.current.value;
-        //inputRef.current.value = '';
-        const messageText = inputRef.current.value; //inputText;
-        //inputRef.current.innerHTML = '';
-        //setSelectedMessage();
-        inputRef.current.value = "";
+        if (inputRefText.current.trim() === '') return
+        debouncedSetText('');
         try {
-            await sendMessageAndUpdateLastGroupMessage(messageText);
-            inputRef.current.value = "";
-            //setInputText('')
+            await sendMessageAndUpdateLastGroupMessage(inputRefText.current.innerHTML);
+            //need to set it to an empty string to resize textarea
+            //inputRef.current.html = "";
             ref.current?.scrollIntoView({behavior: 'smooth'});
-            //if (connection) await connection.send('SendNotification', selectedRoomId);
         } catch (error) {}
     }
 
@@ -58,19 +54,16 @@ const MessageInput = ({ connection }, ref) => {
 
     const onEnterPress = async (e) => {
         if(e.keyCode == 13 && e.shiftKey == false) {
+            e.preventDefault();
             await sendForm()
         }
     }
 
-    React.useEffect(() => {
-        if (emoji) inputRef.current.value+=emoji.emoji;
-       
-        setIsInputTextEmpty(inputRef.current.value === '' ? true : false );
-    },[emoji])
+    if (inputRefText.current) inputRefText.current.focus()
 
-    if (inputRef.current) inputRef.current.focus()
+    //console.log(text);
 
-    useAutosizeTextArea(inputRef.current, inputText);
+    //useAutosizeTextArea(inputRefText.current, text);
 
     return <>
         <form method='post' onSubmit={onSubmitMessage}>
@@ -96,18 +89,18 @@ const MessageInput = ({ connection }, ref) => {
                     <FileInput onChange={(event) => uploadFile(event)} />
                 </div>
                 <div className='message-input__input-wrapper'>
-                     <textarea
-                        onKeyDown={onEnterPress}
-                        ref={inputRef}
-                        placeholder={'Type a message'}
-                        onChange={onInputChange}
+                     <ContentEditable 
+                        innerRef={inputRefText}
                         className='message-input__input'
-                        name={'message'}
-                        wrap={'soft'}
-                    />
+                        onKeyDown={onEnterPress}
+                        onChange={onInputChange}
+                        placeholder={'Type a message'}
+                        disabled={false}
+                        html={text}
+                     />
                 </div>
                 <div className='message-input__send'>
-                    <button type='submit' disabled={isInputTextEmpty} className='message-input__send-button'>
+                    <button type='submit' disabled={false} className='message-input__send-button'>
                         <Send />
                     </button>
                 </div>

@@ -2,6 +2,7 @@ import React, { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 import './Sidebar.scss';
+import parse from 'html-react-parser';
 
 
 const ChatRoomSidebar = ({
@@ -36,7 +37,7 @@ const ChatRoomSidebar = ({
                 <div className='chat-room-sidebar__picture'><img src={groupImgSrc} alt='group picture' /></div>
                 <div className='chat-room-sidebar__group'>
                     <div className='chat-room-sidebar__group-name'>{groupName}</div>
-                    <div className='chat-room-sidebar__group-last_message'>{groupLastMessage}</div>
+                    <div className='chat-room-sidebar__group-last_message'>{parse(groupLastMessage)}</div>
                 </div>
             </div>
             <div className='chat-room-sidebar__last-message-time'>{groupLastMessageTime}</div>

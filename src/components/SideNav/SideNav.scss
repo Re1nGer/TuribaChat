@@ -28,6 +28,10 @@
             list-style: none;
             cursor: pointer;
             margin: .5rem 0;
+
+            &--switch {
+                display: flex;
+            }
         }
 
         &-item:hover {
