@@ -33,7 +33,7 @@ const MessageInput = ({ connection }, ref) => {
     }
 
     const sendForm = async () => {
-        if (inputRefText.current.trim() === '') return
+        if (inputRefText.current.innerHTML.trim() === '') return
         debouncedSetText('');
         try {
             await sendMessageAndUpdateLastGroupMessage(inputRefText.current.innerHTML);
