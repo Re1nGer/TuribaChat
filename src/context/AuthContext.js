@@ -23,6 +23,10 @@ export const AuthContextProvider = ({children}) => {
 
     const [text, setText] = useState('');
 
+    const [isGroupsDeletePopupOpen, setIsGroupsDeletePopupOpen] = useState(false);
+
+    const [isGroupsDeletedAfterLogout, setIsGroupsDeletedAfterLogout] = useState(false);
+
     const debouncedSetText = useDebounce(setText, 100);
 
     const inputRef = useRef('');
@@ -69,7 +73,11 @@ export const AuthContextProvider = ({children}) => {
         inputRef,
         text, 
         debouncedSetText,
-        setText
+        setText,
+        isGroupsDeletePopupOpen,
+        setIsGroupsDeletePopupOpen,
+        isGroupsDeletedAfterLogout,
+        setIsGroupsDeletedAfterLogout
     };
 
     return (<AuthContext.Provider value={value}>

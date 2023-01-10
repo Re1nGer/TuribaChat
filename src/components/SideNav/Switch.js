@@ -5,9 +5,7 @@ import { AuthContext } from '../../context/AuthContext';
 
 function Switch() {
 
-    const [isGroupsDeletedAfterLogout, setIsGroupsDeletedAfterLogout] = React.useState(false);
-
-    const { currentUser } = useContext(AuthContext);
+    const { currentUser, isGroupsDeletedAfterLogout, setIsGroupsDeletedAfterLogout } = useContext(AuthContext);
 
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -38,8 +36,6 @@ function Switch() {
 
         setId(userSetting?.id);
     }
-
-    console.log(isGroupsDeletedAfterLogout);
 
     React.useEffect(() => {
         if (currentUser?.uid) fetchUserSettings();

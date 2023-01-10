@@ -12,11 +12,11 @@ const DropdownMenu = ({ setIsOpen }) => {
 
     const [isAddGroupModalOpen, setIsAddGroupModalOpen] = React.useState(false);
 
-    const { setSelectedRoomId } = useContext(AuthContext);
+    const { setSelectedRoomId, setIsGroupsDeletePopupOpen, isGroupsDeletedAfterLogout } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
-    const handleLogout = async () => {
+    const logout = async () => {
         try {
             setSelectedRoomId('');
             await auth.signOut();
@@ -27,6 +27,12 @@ const DropdownMenu = ({ setIsOpen }) => {
         }
     }
 
+    const handleLogout = async () => {
+        if (isGroupsDeletedAfterLogout)
+            setIsGroupsDeletePopupOpen(true);
+        else logout();
+    }
+
     const handleDropdownClick = (event) => {
         setIsDropdownOpen(prevState => !prevState);
     }
@@ -34,6 +40,8 @@ const DropdownMenu = ({ setIsOpen }) => {
     const handleAddGroupModalClick = () => {
         setIsAddGroupModalOpen(true);
     }
+
+    const handleSettings = () => setIsOpen();
 
     React.useEffect(() => {
         return () => setSelectedRoomId('');
@@ -43,7 +51,7 @@ const DropdownMenu = ({ setIsOpen }) => {
         <div className={isDropdownOpen ? `scale-up-center dropdown dropdown--open` : 'dropdown'} onClick={handleDropdownClick}>
             <div className="dropbtn"><MoreVertical size={16} /></div>
             <div className="dropdown-content">
-                <div className='dropdown-content__link' onClick={() => setIsOpen()}>Settings</div>
+                <div className='dropdown-content__link' onClick={handleSettings}>Settings</div>
                 <div className='dropdown-content__link' onClick={handleAddGroupModalClick}>Create a group</div>
                 <div className='dropdown-content__link' onClick={handleLogout}>Log Out</div>
             </div>
