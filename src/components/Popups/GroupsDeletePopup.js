@@ -1,20 +1,48 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import { auth } from '../../../firebase';
+import { auth, db } from '../../../firebase';
 import { useNavigate } from 'react-router-dom';
 import './Popups.scss';
+import { collection, deleteDoc, doc, getDocs, query, where } from 'firebase/firestore';
 
 const GroupsDeletePopup = () => {
 
-    const { isGroupsDeletePopupOpen,
+    const {
+            isGroupsDeletePopupOpen,
             setIsGroupsDeletePopupOpen,
-            setSelectedRoomId
+            setSelectedRoomId,
+            currentUser
         } = useContext(AuthContext);
 
     const navigate = useNavigate();
 
+    const getAllGroupsCreatedByUser = async () => {
+        try {
+            const q = query(collection(db, 'chatRooms'), where('createdBy', '==', currentUser?.uid));
+            const { docs } = await getDocs(q);
+            return docs;
+        } catch (error) {
+            console.log(error);
+        }
+        return [];
+    }
+
+    const deleteAllGroupsCreatedByUser = async () => {
+        try {
+            const groups = await getAllGroupsCreatedByUser();
+
+            if (groups.length === 0) return;
+
+            groups.forEach(group =>{
+                deleteDoc(doc(db, 'chatRooms', group.id))
+            });
+
+        } catch (error) {}
+    }
+
     const handleLogout = async () => {
         try {
+            await deleteAllGroupsCreatedByUser();
             setSelectedRoomId('');
             await auth.signOut();
             sessionStorage.clear();

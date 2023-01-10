@@ -5,8 +5,6 @@ import './Modal.scss';
 import { AuthContext } from '../../context/AuthContext';
 import { ModalLink } from './ModalLink';
 
-//const link =  process.env.LINK || "";
-
 const AddGroupModal = ({open, setIsOpen}) => {
 
     const { currentUser } = useContext(AuthContext);
