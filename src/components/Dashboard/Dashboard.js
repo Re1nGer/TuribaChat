@@ -7,12 +7,15 @@ import { query, where, collection, onSnapshot, arrayUnion, doc, updateDoc } from
 import { db } from '../../../firebase';
 import EmojiPicker, { Emoji } from 'emoji-picker-react';
 import { renderToString } from 'react-dom/server'
+import useWindowDimensions from '../../hooks/useWindowDimensions';
 
 const Dashboard = ({ groupId }) => {
 
     const [groups, setGroups] = React.useState([]);
 
     const { currentUser, isEmojiTabOpen, debouncedSetText } = React.useContext(AuthContext);
+
+    const { width } = useWindowDimensions();
 
     const fetchGroups = () => {
         if (currentUser?.uid) {
@@ -50,7 +53,7 @@ const Dashboard = ({ groupId }) => {
         <div className='dashboard'>
             <Sidebar groups={groups} />
             <ChatRoom />
-            { isEmojiTabOpen &&
+            { isEmojiTabOpen && width > 500 &&
                 <div className='emoji__tab'>
                     <EmojiPicker
                         width={'100%'}

@@ -25,7 +25,7 @@ const AddGroupModal = ({open, setIsOpen}) => {
 
             const docRef = await addDoc(collection(db, 'chatRooms'), {
                 createdAt: serverTimestamp(),
-                createdBy: currentUser.uid,
+                createdBy: currentUser.displayName,
                 members: Array(currentUser.uid),
                 name: groupName.value,
                 recentMessage: { message: '' }

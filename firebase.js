@@ -49,7 +49,6 @@ const provider = new GoogleAuthProvider();
 const gitProvider = new GithubAuthProvider();
 
 export const signInWithGoogle = async () => {
-
   try {
     const request = await signInWithPopup(auth, provider);
     const { user } = request;
@@ -67,6 +66,28 @@ export const signInWithGoogle = async () => {
   } catch(error) {
     console.log(error);
   } 
+}
+
+//for mobile case
+export const signInWithGoogleRedirect = async () => {
+  try {
+    const request = await signInWithGoogleRedirect(auth, provider);
+    const { user } = request;
+    const q = query(collection(db, "users"), where("uid", "==", user.uid));
+    const docs = await getDocs(q);
+    if (docs.docs.length === 0) {
+      await addDoc(collection(db, "users"), {
+        uid: user.uid,
+        name: user.displayName,
+        authProvider: "google",
+        email: user.email,
+        photoUrl: user.photoURL
+      });
+    }
+  } catch(error) {
+    console.log(error);
+  } 
+
 }
 
 

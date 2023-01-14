@@ -11,7 +11,6 @@ const SignInModal = () => {
 
     const { state } = useLocation();
 
-
     const handleGoogleLogin = async () => {
         try {
 

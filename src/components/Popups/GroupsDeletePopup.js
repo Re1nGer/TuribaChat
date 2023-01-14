@@ -34,10 +34,14 @@ const GroupsDeletePopup = () => {
             if (groups.length === 0) return;
 
             groups.forEach(group =>{
-                deleteDoc(doc(db, 'chatRooms', group.id))
+                deleteDoc(doc(db, 'chatRooms', group.id)).then(_ => {
+                    deleteDoc(doc(db, 'messages', group.id));
+                })
             });
 
-        } catch (error) {}
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleLogout = async () => {

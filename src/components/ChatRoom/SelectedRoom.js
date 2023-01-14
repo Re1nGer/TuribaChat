@@ -8,6 +8,10 @@ import { onSnapshot, limitToLast, doc } from 'firebase/firestore';
 import { db } from '../../../firebase';
 import useDebounce from '../../hooks/useDebounce';
 import { useParams } from 'react-router-dom';
+import EmojiPicker from 'emoji-picker-react';
+import { Emoji } from 'emoji-picker-react';
+import useWindowDimensions from '../../hooks/useWindowDimensions';
+import { renderToString } from 'react-dom/server';
 
 // function returns ids of messages that appear last before they superseded by another user
 const selectBreakingMessage = (messages) => {
@@ -29,9 +33,11 @@ const SelectedRoom = () => {
 
     const { groupId } = useParams();
 
-    const { currentUser, selectedRoomId } = useContext(AuthContext);
+    const { currentUser, selectedRoomId, isEmojiTabOpen, debouncedSetText } = useContext(AuthContext);
 
     const { connection, isUserTyping, setIsUserTyping } = useSignalR();  
+
+    const { width } = useWindowDimensions();
 
     const [messages, setMessages] = useState([]);
 
@@ -39,6 +45,13 @@ const SelectedRoom = () => {
         setIsUserTyping(true);
         setTimeout(() => setIsUserTyping(false), 5000);
     }
+
+    const handleEmojiClick = (e) => {
+        const htmlEmoji = renderToString(<Emoji unified={e.unified} size={20} />);
+        debouncedSetText(prevState => prevState.concat(htmlEmoji));
+    }
+
+    const isMobile = width < 500;
 
     React.useEffect(() => {
         ref.current?.scrollIntoView({behavior: 'smooth'});
@@ -106,6 +119,20 @@ const SelectedRoom = () => {
                 </div>
             </div>
         </div>
+        { isEmojiTabOpen && isMobile &&
+            <EmojiPicker
+                width={'100%'}
+                height={500}
+                searchDisabled={true}
+                previewConfig={{showPreview: false}}
+                autoFocusSearch={false}
+                emojiStyle='apple'
+                theme='light'
+                emojiVersion={'12.0'}
+                onEmojiClick={handleEmojiClick}
+                lazyLoadEmojis={true}
+            />
+         }
         <MessageInput connection={connection} ref={ref} />
     </>
 }

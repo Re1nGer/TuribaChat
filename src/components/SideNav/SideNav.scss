@@ -9,6 +9,9 @@
     }
 
     &__container--open {
+        @media screen and (max-width: 350px) {
+            width: 350px;
+        }
         width: 400px;
         z-index: 10;
     }

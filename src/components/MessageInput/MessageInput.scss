@@ -43,6 +43,12 @@
     }
 
     &__input {
+        @media screen and (max-width: 350px) {
+            //necessary to align message content at mobile
+            display: flex;
+            flex-wrap: wrap;
+        }
+
         border: 1px solid #fff;
         background: #fff;
         border-radius: 5px;

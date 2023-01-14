@@ -37,6 +37,7 @@ const MessageInput = ({ connection }, ref) => {
         debouncedSetText('');
         try {
             await sendMessageAndUpdateLastGroupMessage(inputRefText.current.innerHTML);
+            inputRefText.current.innerHTML = '';
             //need to set it to an empty string to resize textarea
             //inputRef.current.html = "";
             ref.current?.scrollIntoView({behavior: 'smooth'});
@@ -53,7 +54,7 @@ const MessageInput = ({ connection }, ref) => {
     }
 
     const onEnterPress = async (e) => {
-        if(e.keyCode == 13 && e.shiftKey == false) {
+        if(e.keyCode == 13 && e.shiftKey === false) {
             e.preventDefault();
             await sendForm()
         }
@@ -99,6 +100,7 @@ const MessageInput = ({ connection }, ref) => {
                         html={text}
                      />
                 </div>
+{/*                 There is an Emoji Picker at Dashboard component which also has onEmojiClick event listener */}
                 <div className='message-input__send'>
                     <button type='submit' disabled={false} className='message-input__send-button'>
                         <Send />

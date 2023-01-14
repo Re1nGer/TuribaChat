@@ -48,7 +48,7 @@ const DropdownMenu = ({ setIsOpen }) => {
     },[])
 
     return ( <>
-        <div className={isDropdownOpen ? `scale-up-center dropdown dropdown--open` : 'dropdown'} onClick={handleDropdownClick}>
+        <div className={isDropdownOpen ? 'scale-up-center dropdown dropdown--open' : 'dropdown'} onClick={handleDropdownClick}>
             <div className="dropbtn"><MoreVertical size={16} /></div>
             <div className="dropdown-content">
                 <div className='dropdown-content__link' onClick={handleSettings}>Settings</div>
